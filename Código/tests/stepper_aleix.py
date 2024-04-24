@@ -8,10 +8,10 @@ import RPi.GPIO as GPIO
 
 # Use BCM GPIO references
 # Instead of physical pin numbers
-GPIO.setmode(GPIO.BCM)
+GPIO.setmode(GPIO.BOARD)
 
 # Define GPIO signals to use Pins 18,22,24,26 GPIO24,GPIO25,GPIO8,GPIO7
-StepPins = [24,25,8,7]
+StepPins = [18,22,24,26]
 # Set all pins as output
 for pin in StepPins:
         print("Setup pins")
