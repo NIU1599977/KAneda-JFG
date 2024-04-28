@@ -3,6 +3,7 @@ import smbus
 import time
 import pickle
 import self_balancing_bike
+import RPi.GPIO as GPIO
 
 # Dirección del dispositivo I2C
 DEVICE_ADDRESS = 0x68  # Ejemplo de dirección, asegúrate de ajustarla según tu dispositivo
@@ -133,3 +134,26 @@ def Motor2_control(sp):
     else:
         self_balancing_bike.GPIO.output(self_balancing_bike.DIR_2, self_balancing_bike.GPIO.HIGH)
     self_balancing_bike.PWM_2.start(255 - abs(sp))
+
+def ENC_READ():
+    cur = ((not GPIO.input(self_balancing_bike.ENC_1)) << 1) + (not GPIO.input(self_balancing_bike.ENC_2))
+    old = self_balancing_bike.pos & 0b11
+    dir = (self_balancing_bike.pos & 0b110000) >> 4
+
+    if cur == 3: 
+        cur = 2
+    elif cur == 2: 
+        cur = 3
+
+    if cur != old:
+        if dir == 0:
+            if cur == 1 or cur == 3:
+                dir = cur
+        else:
+            if cur == 0:
+                if dir == 1 and old == 3:
+                    enc_count -= 1
+                elif dir == 3 and old == 1:
+                    enc_count += 1
+                dir = 0
+        self_balancing_bike.pos = (dir << 4) + (old << 2) + cur

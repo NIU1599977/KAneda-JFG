@@ -24,15 +24,19 @@ SPEED_LIMIT = 4
 GYRO_AMOUNT = 0.996
 
 # Variables globales
-vertical = False
-calibrating = False
-calibrated = False
+global vertical 
+global calibrating 
+global calibrated 
+
 
 K1 = 115
 K2 = 15.00
 K3 = 8.00
 K4 = 0.60
 LOOP_TIME = 10
+vertical = False
+calibrating = False
+calibrated = False
 class OffsetsObj:
     def __init__(self):
         self.ID = 0
@@ -63,23 +67,18 @@ bat_divider = 58
 
 currentT = previousT_1 = previousT_2 = 0
 
-# Configuración de pines GPIO
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(PWM_1, GPIO.OUT)
-GPIO.setup(DIR_1, GPIO.OUT)
-GPIO.setup(PWM_2, GPIO.OUT)
-GPIO.setup(DIR_2, GPIO.OUT)
-GPIO.setup(BRAKE, GPIO.OUT)
-GPIO.setup(BUZZER, GPIO.OUT)
-GPIO.setup(ENC_1, GPIO.IN)
-GPIO.setup(ENC_2, GPIO.IN)
+
 # En Raspberry Pi, no necesitas configurar los temporizadores como en Arduino
 steering_servo = None  # Deberías usar la biblioteca adecuada para controlar servos en Raspberry Pi
-calibrated = False
+
+
 
 
 def setup():
-    global calibrated
+    # Se utiliza para inicializar varios componentes del robot.
+    
+    # Configuración de pines GPIO
+    GPIO.setmode(GPIO.BOARD)
     GPIO.setup(PWM_1, GPIO.OUT)
     GPIO.setup(PWM_2, GPIO.OUT)
     GPIO.setup(DIR_1, GPIO.OUT)
@@ -97,6 +96,7 @@ def setup():
     functions.angle_setup()
 
 def loop():
+    # Función principal que se ejecuta en bucle.
     global currentT
     global previousT_1
     global previousT_2
