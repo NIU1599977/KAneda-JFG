@@ -1,5 +1,5 @@
 import serial
-# import self_balancing_bike
+import self_balancing_bike
 import time
 
 # Configuración del puerto serie
@@ -15,22 +15,22 @@ def move(distance, angle):
     
     # Mover la bicicleta
     if distance > 0:
-        speed_remote = self_balancing_bike.SPEED_MAX
+        self_balancing_bike.speed_remote = self_balancing_bike.SPEED_MAX
     else:
-        speed_remote = -self_balancing_bike.SPEED_MAX
+        self_balancing_bike.speed_remote = -self_balancing_bike.SPEED_MAX
     time.sleep(move_time)
-    speed_remote = 0  # Detener la bicicleta
+    self_balancing_bike.speed_remote = 0  # Detener la bicicleta
     
     # Calcular el tiempo necesario para girar el ángulo deseado
     turn_time = abs(angle * TURN_TIME)
     
     # Girar la bicicleta
     if angle > 0:
-        steering_remote = self_balancing_bike.STEERING_MAX
+        self_balancing_bike.steering_remote = self_balancing_bike.STEERING_MAX
     else:
-        steering_remote = -self_balancing_bike.STEERING_MAX
+        self_balancing_bike.steering_remote = -self_balancing_bike.STEERING_MAX
     time.sleep(turn_time)
-    steering_remote = 0  # Detener el giro
+    self_balancing_bike.steering_remote = 0  # Detener el giro
 
 # Ejemplo de uso: avanza 30 cm recto, luego gira 90 grados y luego avanza recto 50 cm
 #move(30, 0)

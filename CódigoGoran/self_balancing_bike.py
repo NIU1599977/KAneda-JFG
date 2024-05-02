@@ -4,6 +4,8 @@ import time
 import numpy
 import functions
 import pickle
+import remote
+from gpiozero import Servo
 
 PWM_1 = 9
 DIR_1 = 7
@@ -65,7 +67,7 @@ motor_counter = 0
 enc_count = 0
 motor_speed = numpy.int16
 motor_pos = numpy.int32
-sterring_remote = 0
+steering_remote = 0
 speed_remote = 0
 speed_value = 0
 steering_value = STEERING_CENTER
@@ -75,7 +77,11 @@ bat_divider = 58 # Este valor necesita ajustarse para medir correctamente el vol
 currentT = 0
 previousT = 0
 previousT_2 = 0
+# Define el pin al que está conectado el servo
+pin_servo = 17
 
+# Crea un objeto Servo
+steering_servo = Servo(pin_servo)
 
 def save_offsets(offsets):
     with open('offsets.pickle', 'wb') as f:
@@ -105,9 +111,71 @@ def setup():
     offsets = load_offsets()
     calibrated = offsets["ID"] == 35
     time.sleep(3)
-    functions.beep()
+    #functions.beep()
     functions.angle_setup()
 
+def constrain(val, min_val, max_val):
+    return min(max_val, max(min_val, val))
+
+def loop():
+    currentT = time.time() * 1000
+
+    if currentT - previousT >= loop_time:
+        #Tuning()
+        user_input = input("Por favor entra un comando dist y angulo de esta forma dist,ang: ")
+        dist, ang = user_input.split(',')
+        dist = int(x)
+        ang = int(y)
+        remote.move(dist, ang)
+        functions.angle_calc()
+
+        motor_speed = -enc_count
+        enc_count = 0
+
+        if vertical and calibrated and not calibrating:
+            GPIO.output(BRAKE, GPIO.HIGH)
+            gyroX = GyX / 131.0 # convert to deg/s
+            gyroXfilt = alpha * gyroX + (1 - alpha)*gyroXfilt 
+            motor_pos += motor_speed
+            motor_pos = constrain(motor_pos, -110, 110)
+
+            pwm = constrain(K1*robot_angle+K2*gyroXfilt+K3*motor_speed+K4*motor_pos, -255, 255)
+            functions.Motor1_control(-pwm)
+
+            if (speed_value - speed_remote) > SPEED_LIMIT:
+                speed_value -= SPEED_LIMIT
+            elif (speed_value - speed_remote) < -SPEED_LIMIT:
+                speed_value += SPEED_LIMIT
+            else:
+                speed_value = speed_remote
+            if (steering_value - STEERING_CENTER - steering_remote) > ST_LIMIT:
+                steering_value -= ST_LIMIT
+            elif (steering_value - STEERING_CENTER - steering_remote) < -ST_LIMIT:
+                steering_value += ST_LIMIT
+            else:
+                steering_value = STEERING_CENTER + steering_remote
+
+            steering_servo.value = steering_value
+            functions.Motor2_control(speed_value)
+        else:
+            GPIO.output(BRAKE, GPIO.LOW)
+            steering_value = STEERING_CENTER
+            steering_servo.value = STEERING_CENTER
+            speed_value = 0
+            functions.Motor1_control(0)
+            functions.Motor2_control(0)
+            motor_pos = 0
+        previousT = currentT
+    if currentT - previousT_2 >= 2000:
+        if not calibrated and not calibrating:
+            print("first you need to calibrate the balacing point...")
+        previousT_2 = currentT
+
+
+    
+
+    while True:
+        loop()
 
 
 
