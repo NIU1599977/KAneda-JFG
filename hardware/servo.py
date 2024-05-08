@@ -20,4 +20,5 @@ def test():
         sleep(0.5)
         servo.value = 0.5
 
-test()
+def turn(value):
+    servo.value = value

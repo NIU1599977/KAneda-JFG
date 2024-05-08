@@ -23,8 +23,8 @@ class Stepper:
             GPIO.setup(pin, GPIO.OUT)
             GPIO.output(pin, 0)
 
-    def move(self, speed_time):
-        for i in range(512):
+    def move(self, iterations=512, speed_time=0.00059):
+        for i in range(iterations):
             for halfstep in range(8):
                 for pin in range(4):
                     GPIO.output(self.control_pins[pin], HALFSTEP_SEQ[halfstep][pin])

@@ -63,33 +63,37 @@ long currentT, previousT_1, previousT_2 = 0;
 ServoTimer2 steering_servo;
 
 void setup() {
+  // j:NO, configura UART para el mando.
   Serial.begin(115200);
 
   // Pins D9 and D10 - 7.8 kHz
-  TCCR1A = 0b00000001; 
+  // j:?
+  TCCR1A = 0b00000001;
   TCCR1B = 0b00001010; 
-
-  steering_servo.attach(A3); 
+  // j:NO
+  steering_servo.attach(A3);
   steering_servo.write(STEERING_CENTER); 
-
+  // j:NO
   pinMode(DIR_1, OUTPUT);  
   pinMode(DIR_2, OUTPUT);
   pinMode(BRAKE, OUTPUT);
   pinMode(BUZZER, OUTPUT);
   pinMode(ENC_1, INPUT);
   pinMode(ENC_2, INPUT);
-  
-  Motor1_control(0);
+  // j:Pone los motores a velocidad máx.
+  Motor1_control(0); 
   Motor2_control(0);
-
-  attachInterrupt(0, ENC_READ, CHANGE);
+  // j:Prepara interrupciones, suponemos que no hace falta.
+  attachInterrupt(0, ENC_READ, CHANGE); 
   attachInterrupt(1, ENC_READ, CHANGE);
-
+  // j:Lee offsets de la ROM del Arduino.
   EEPROM.get(0, offsets);
   if (offsets.ID == 35) calibrated = true;
     else calibrated = false;
   delay(3000);
+  //j:No tenemos buzzer.
   beep();
+  
   angle_setup();
 }
 

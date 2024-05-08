@@ -40,7 +40,7 @@ def read_raw_data(addr):
             value = value - 65536
     return value
 
-def get_data():
+def get_data(): # TODO: Tener en cuenta offsets
     print (" Reading Data of Gyroscope and Accelerometer")
     # Read Accelerometer raw value
     acc_x = read_raw_data(ACCEL_XOUT_H)
