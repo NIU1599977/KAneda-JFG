@@ -99,7 +99,7 @@ void angle_setup() {
   beep();
   Serial.print("GyX offset: ");  Serial.println(GyX_offset);
 }
-
+// j:No aplica a nuestro caso.
 void battVoltage(double voltage) {
   if (voltage > 8 && voltage <= 9.5) {
     digitalWrite(BUZZER, HIGH);
@@ -108,7 +108,7 @@ void battVoltage(double voltage) {
   }
 }
 
-void Motor1_control(int sp) {
+void Motor1_control(int sF) {
   if (sp > 0) digitalWrite(DIR_1, LOW);
     else digitalWrite(DIR_1, HIGH);
   analogWrite(PWM_1, 255 - abs(sp));
@@ -119,7 +119,7 @@ void Motor2_control(int sp) {
     else digitalWrite(DIR_2, HIGH);
   analogWrite(PWM_2, 255 - abs(sp));
 }
-
+// j:TUNING YA ADPATADA -> calibrate()
 int Tuning() {
   if (!Serial.available())  return 0;
   delay(2);
@@ -164,7 +164,7 @@ int Tuning() {
    }
    return 1;
 }
-
+// j:No parece necesario por ahora.
 void printValues() {
   Serial.print("K1: "); Serial.print(K1);
   Serial.print(" K2: "); Serial.print(K2);
