@@ -12,13 +12,13 @@ TURN_TIME = 0.01
 
 class Moto:
     def __init__(self):
-        self.K1 = 0
-        self.K2 = 0
-        self.K3 = 0
-        self.K4 = 0
+        self.K1 = 115
+        self.K2 = 15.00
+        self.K3 = 8.00
+        self.K4 = 0.60
         self.vertical = False
-        self.angle = 0
-        self.acc_angle = 0
+        self.angle = 0.0
+        self.acc_angle = 0.0
         self.s1 = stepper.Stepper([31,33,35,37])
         self.s2 = stepper.Stepper([18,22,24,26])
         self.servo = Servo(17)
@@ -82,7 +82,7 @@ class Moto:
             angle_calc()
             time.sleep(0.003)
 
-    def enc_read(): # TODO: Entender para qué sirve esto y si hace falta (leer stepper).
+    def enc_read(): # TODO: Entender para qué sirve esto y si hace falta (leer encoder del stepper).
         pass
         
     def move(distance, angle):
