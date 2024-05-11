@@ -1,0 +1,3 @@
+./bike/central/volante_inercia.stl imprimirlo en metal
+
+Todo el resto de piezas en plástico
