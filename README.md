@@ -87,7 +87,40 @@ La parte posterior de la motocicleta ha sido completamente rediseñada desde cer
 
 ## Arquitectura del Software
 
+Kaneda-JFG se compone de los siguientes módulos:
+
+### Módulo de Detección de señales
+
+### Módulo de control de la inclinación
+
+### Módulo de control de la moto
+
+### Módulo de Interacción HW/SW
+
 ## Algorítmica
+
+### Filtro de Kalman
+
+Para poder controlar la orientación de la moto y evitar que se caiga, hemos pensado en implementar el famoso algoritmo conocido como **Filtro de Kalman**.
+
+#### Breve descripción del filtro de Kalman
+
+El filtro de Kalman se trata de un algoritmo que puede estimar parámetros observables y no observables con gran precisión en tiempo real. Es utilizado para estimar las variables de un sistema basándose en medidas con ruido, calcula las diferentes probabilidades del estado de un sistema. Lo podemos ver como una caja negra, donde las entradas son ruidosas y, a veces, contienen mediciones inexactas. Y los resultados son menos ruidosos y tienen más precisión.
+
+Este algoritmo es muy utilizado en robótica y sistemas en tiempo real que necesitan información confiable. Su importancia recae en poder estimar parámetros del sistema que no se pueden medir u observar con precisión, permitiendo así a los sistemas tener un mayor control y, por tanto, más capacidades.
+
+Este algoritmo se basa principalmente en 2 pasos:
+
+1) **Predicción:** Donde, basándose en el estado anterior del sistema se predice el estado actual del sistema y su incertidumbre.
+2) **Actualización (o Corrección):** Se utilizan las mediciones actuales para actualizar la estimación del estado y reducir la incertidumbre (el ruido). 
+
+Estos 2 pasos se repiten en cada paso de tiempo para producir una estimación del estado de forma más precisa.
+
+#### ¿Cómo encaja con nuestro proyecto?
+
+Precisamente, por lo explicado en el subapartado anterior, el filtro de Kalman se trata de una herramienta poderosa que nos permitirá obtener la futura inclinación que tomará la moto antes de que ocurra.
+De esta manera, sabiendo este dato, nos permitirá corregir la inclinación de la moto ajustando los parámetros del volante de inercia (ajustando potencia y dirección) según la inclinación de la moto.
+
 
 ## Visión por Computador
 
