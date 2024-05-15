@@ -35,10 +35,25 @@ La tecnología de auto-balanceo de la motocicleta se basa en el proyecto [Self-B
 
 ## Componentes Mecánicos
 
+### Movimiento
+
 | Componente | Imagen | Unidades |
 | --- | --- | --- |
 | [Rueda Solarbotics antideslizante](https://tienda.bricogeek.com/robotica/230-rueda-solarbotics-antideslizante.html) | <img src="https://tienda.bricogeek.com/3429-thickbox_default/rueda-solarbotics-antideslizante.jpg" width="200" height="150"/> | 2 |
 | [Rodamiento 608-2RS (8x22x7mm)](https://tienda.bricogeek.com/rodamientos/1294-rodamiento-608-2rs-8x22x7mm.html) | <img src="https://tienda.bricogeek.com/9166-thickbox_default/rodamiento-608-2rs-8x22x7mm.jpg" width="200" height="150"/> | 2 |
+
+### Tornillos
+
+| Métrica | Longitud (cm) | Partes | Unidades | Tuercas |
+| --- | --- | --- | --- | --- |
+| M1 | 1 | Soporte Motor - Motor | 2 | Sí |
+| M2 | 1 | Cámara | 2 | Sí |
+| M2 | 2 | Servo | 2 | Sí |
+| M3 | 1 | Soporte Stepper | 2 | Sí |
+| M3 | 1,5 | Manillar, Frontal - Base, Base - Motor, Soporte Motor - Soporte Motor, Soporte Motor - Soporte Motor, Soporte Motor - Base | 12 | Sí |
+| M3 | 2 | Culo | 4 | Sí |
+| M3 | 3 | Base - Base | 2 | Sí |
+| M4 | 0,5 | Volante de Inercia | 16 | Sí |
 
 ## Esquema Eléctrico
 
