@@ -102,9 +102,13 @@ La parte posterior de la motocicleta ha sido completamente rediseñada desde cer
 
 ## Arquitectura del Software
 
-Kaneda-JFG se compone de los siguientes módulos:
+En relación con el componente de software de nuestro proyecto, hemos emprendido la tarea de traducir e interpretar el código del proyecto de referencia, que originalmente fue diseñado para Arduino (código **.ino**). Sin embargo, la principal complejidad de nuestro robot radica en que no estamos utilizando Arduino, sino una Raspberry Pi Zero. Como resultado, hemos tenido que investigar exhaustivamente sobre las librerías adecuadas para nuestra placa y además adaptar su código y reestructurarlo (e incluso añadir funcionalidades) en base a nuestro proyecto.
+
+El software de Kaneda-JFG se compone de cuatro módulos, los cuales, en su totalidad, habilitarán la funcionalidad completa del robot.
+
 
 ### Módulo de Detección de señales
+Este módulo, tal y como indica su nombre se centra en la detección de la señales de tráfico y la reacción del robot a cada una de estas. 
 
 ### Módulo de control de la inclinación
 
