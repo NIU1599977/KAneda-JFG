@@ -155,6 +155,11 @@ De esta manera, sabiendo este dato, nos permitirá corregir la inclinación de l
 
 
 ## Visión por Computador
+### Breve descripción de la idea de visión por computador
+La implementación que queremos hacer, va sobre poner una camará en la moto, para que cuando vea una señal, poder reaccionar a ella dependiendo del significado de la señal. Por ejemplo si la moto detecta una señal de STOP, entonces tiene que reaccionar parando en el sitio de la señal.
+### YOLO
+Yolo es la tecnologia que usaremos para nuestra implementación para el tema de la visión por computador. Yolo se refiere a "You Only Look Once", un algoritmo de detección de objetos en tiempo real. Desarrollado por Joseph Redmon, YOLO es conocido por su rapidez y precisión al identificar y localizar objetos en imágenes y videos en una sola pasada por la red neuronal, lo que lo hace muy eficiente para aplicaciones en tiempo real como la vigilancia, la conducción autónoma y la robótica. Este algoritmo ha sido recomendado para el profesor de prácticas de Visión por Computador.
+### Ejemplos del algoritmo Yolo
 
 ## Simulación
 
