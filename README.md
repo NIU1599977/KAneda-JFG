@@ -111,10 +111,23 @@ El software de Kaneda-JFG se compone de cuatro módulos, los cuales, en su total
 Este módulo, tal y como indica su nombre se centra en la detección de la señales de tráfico y la reacción del robot a cada una de estas. 
 
 ### Módulo de control de la inclinación
+El módulo de control de inclinación de la moto se ejecuta mediante un bucle que constantemente utiliza el **Filtro de Kalman** para predecir en aproximadamente 1 segundo, la inclinación que tendrá la moto.
+
+De esta forma, al conocer la próxima inclinación del robot se podrá contrarrestar utilizando el volante de inercia para mantener la moto en pie en todo momento.
 
 ### Módulo de control de la moto
+Otro módulo importante de la moto, es el módulo que nos permite controlar la moto. A la vez que este va prediciendo su inclinación con el filtro de kalman (módulo de control de la inclinación) también espera comandos que el usuario debe introducir.
+
+El usuario debe introducir una serie de comandos para indicar el camino que debe recorrer la moto, indicando en todo momento la distancia a recorrer y el ángulo (si tiene que ir recto o girar).
+
+**Ejemplo:**
+>> 20,0 0,90 5,0 0,45 35,0 0,0 (ve recto 20cm, gira 90º derecha, ve recto 5cm, gira 45º derecha, ve recto 35cm y para).
+
 
 ### Módulo de Interacción HW/SW
+Este es de los módulos más importante del programa que controla la moto, ya que es el que permite la comunicación entre la parte física de la moto con la parte Software de esta.
+
+Junta cada una de las funcionalidades que ofrece la moto y las coordina según los datos que envíen los sensores de la moto, los comandos introducidos por el usuario, etc.
 
 ## Algorítmica
 
