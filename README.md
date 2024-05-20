@@ -156,13 +156,32 @@ De esta manera, sabiendo este dato, nos permitirá corregir la inclinación de l
 
 ## Visión por Computador
 ### Breve descripción de la idea de visión por computador
-La implementación que queremos hacer, va sobre poner una camará en la moto, para que cuando vea una señal, poder reaccionar a ella dependiendo del significado de la señal. Por ejemplo si la moto detecta una señal de STOP, entonces tiene que reaccionar parando en el sitio de la señal.
+La implementación que queremos hacer, va sobre poner una camará en la moto, para que cuando vea una señal, poder reaccionar a ella dependiendo del significado de la señal.
 ### YOLO
 Yolo es la tecnologia que usaremos para nuestra implementación para el tema de la visión por computador. Yolo se refiere a "You Only Look Once", un algoritmo de detección de objetos en tiempo real. Desarrollado por Joseph Redmon, YOLO es conocido por su rapidez y precisión al identificar y localizar objetos en imágenes y videos en una sola pasada por la red neuronal, lo que lo hace muy eficiente para aplicaciones en tiempo real como la vigilancia, la conducción autónoma y la robótica. Este algoritmo ha sido recomendado para el profesor de prácticas de Visión por Computador.
 ### Ejemplos del algoritmo Yolo
 | Ejemplo 1 | Ejemplo 2 |
 | --- | --- |
-| ![yolo_example_1](image/README/yolo_example_1.png) | ![yolo_example_2](image/README/yolo_example_2.png) |
+| ![yolo_example_1](image/README/yolo_example_1.jpeg) | ![yolo_example_2](image/README/yolo_example_2.jpeg) |
+
+### Aplicación en la KAneda-JFG
+
+**Captura de Imagen:** La moto está equipada con una cámara de la raspberry pi que capturará imagenes en tiempo real.
+
+**Procesamiento de Imagen:** Las imagenes capturadas se pasan al algoritmo YOLO, que detecta y clasifica las señales de tráfico presentes en la imagen.
+
+**Identificación de Señales** YOLO puede detectar diversas señales de tráfico como "Stop", "Límite de Velocidad", "Ceda el Paso", "No Estacionar", entre otras.
+
+**Reacción de la Moto** Dependiendo de la señal detectada, la moto tomará diferentes acciones. 
+
+**El ejemplo que queremos aplicar:**
+
+**Señal de Stop:** La moto reducirá la velocidad y se detendrá completamente.
+
+**Límite de Velocidad:** La moto ajustará su velocidad para cumplir con el límite indicado.
+
+**Ceda el Paso:** La moto reducirá la velocidad y esperará hasta que sea seguro avanzar.
+
 ## Simulación
 
 ## Contribuciones y Agradecimientos
