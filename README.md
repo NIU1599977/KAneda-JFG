@@ -160,7 +160,9 @@ La implementación que queremos hacer, va sobre poner una camará en la moto, pa
 ### YOLO
 Yolo es la tecnologia que usaremos para nuestra implementación para el tema de la visión por computador. Yolo se refiere a "You Only Look Once", un algoritmo de detección de objetos en tiempo real. Desarrollado por Joseph Redmon, YOLO es conocido por su rapidez y precisión al identificar y localizar objetos en imágenes y videos en una sola pasada por la red neuronal, lo que lo hace muy eficiente para aplicaciones en tiempo real como la vigilancia, la conducción autónoma y la robótica. Este algoritmo ha sido recomendado para el profesor de prácticas de Visión por Computador.
 ### Ejemplos del algoritmo Yolo
-
+| Ejemplo 1 | Ejemplo 2 |
+| --- | --- |
+| ![yolo_example_1](image/README/yolo_example_1.png) | ![yolo_example_2](image/README/yolo_example_2.png) |
 ## Simulación
 
 ## Contribuciones y Agradecimientos
