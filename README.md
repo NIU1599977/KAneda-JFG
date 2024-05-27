@@ -57,6 +57,8 @@ La tecnología de auto-balanceo de la motocicleta se basa en el proyecto [Self-B
 
 ## Esquema Eléctrico
 
+![KAneda-JFG](fritzing/KAneda-JFG.jpg)
+
 ## Diseño 3D
 
 Para el diseño 3D se ha optado por emplear los softwares FreeCAD y Cinema4D debido a que uno de los integrantes ya estaba familiarizado con él. El esqueleto de la motocicleta ha venido dado por el proyecto realizado por remrc, el cual tiene compartido en la página Thingiverse los [modelos](https://www.thingiverse.com/thing:5887157/files) que ha utilizado.
