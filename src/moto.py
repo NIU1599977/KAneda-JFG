@@ -4,6 +4,8 @@ import hardware.stepper.py
 import math
 import smbus
 import time
+import RPi.GPIO as GPIO
+
 
 LOOP_TIME = 10
 GYRO_AMOUNT = 0.996
@@ -22,6 +24,15 @@ class Moto:
         self.s1 = stepper.Stepper([31,33,35,37])
         self.s2 = stepper.Stepper([18,22,24,26])
         self.servo = Servo(17)
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(12, GPIO.OUT)
+        GPIO.setup(16, GPIO.OUT)
+        # Configuración inicial del PID
+        self.kp = 0.1  # Constante proporcional
+        self.ki = 0.01  # Constante integral
+        self.kd = 0.001  # Constante derivativa
+        self.error_anterior = 0
+        self.integral = 0
 
     def calibrate(): # Adaptación de Tuning() (functions.ino)
         calibrated = False
@@ -99,3 +110,29 @@ class Moto:
         if distance > 0:
             self.s1.move(distance) # Cambiar por s2 si no es este stepper.
             time.sleep(move_time)
+    def move_volanteInercia(angulo, vel_angular):
+        if (angulo != 0):
+            error = -1 * vel_angular
+            proporcional = self.kp * error;
+            integral += self.ki * error;
+            derivativo = self.kd * (error - self.error_anterior)
+            salida = proporcional + integral + derivativo
+            salida = max(min(salida, 5), 0)
+            if (angulo > 0): #Voy a asumir que cuando es > 0 se inclina a la derecha
+                # Asumo que este mueve el volante de inercia a la izquierda
+                GPIO.output(12, GPIO.HIGH)
+                GPIO.output(16, GPIO.LOW)
+                time.sleep(salida)
+                # Frenamos
+                GPIO.output(12, GPIO.LOW)
+                GPIO.output(16, GPIO.LOW)
+                time.sleep(salida)
+            else: #Se está inclinando hacia la izquierda, asumo
+                GPIO.output(12, GPIO.HIGH)
+                GPIO.output(16, GPIO.LOW)
+                time.sleep(salida)
+                # Frenamos
+                GPIO.output(12, GPIO.LOW)
+                GPIO.output(16, GPIO.LOW)
+                time.sleep(salida)
+            self.error_anterior = error;
