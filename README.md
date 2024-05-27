@@ -96,7 +96,7 @@ La motocicleta tiene soporte para utilizar visión por computador, por ello, se 
 
 ### Parte posterior
 
-La parte posterior de la motocicleta ha sido completamente rediseñada desde cero debido al límite presupuestario. En un principio remrc utilizaba un stepper y una correa para transmitir la potencia a la rueda trasera, nosotros hemos optado por utilizar un micro-stepper y transmitir la potencia mediante el uso de dos engranajes de 16 dientes, disponibles en [thingiverse](https://www.thingiverse.com/thing:146289). Además, hemos optado por añadir un rodamiento de 22mm x 8mm para mitigar las imprecisiones que puedan surgir utilizando un eje transversal e impresión 3D. Con ello, nuestra parte trasera quedaría tal que así.
+La parte posterior de la motocicleta ha sido completamente rediseñada desde cero debido al límite presupuestario. En un principio remrc utilizaba un stepper y una correa para transmitir la potencia a la rueda trasera, nosotros hemos optado por utilizar un micro-stepper y transmitir la potencia mediante el uso de dos engranajes de 16 dientes, disponibles en [thingiverse](https://www.thingiverse.com/thing:146289). Además, hemos optado por añadir un rodamiento de 22mm x 8mm para mitigar las imprecisiones que puedan surgir utilizando un eje transversal e impresión 3D. Finalmente añadir que como eje se ha utilizado un tornillo M3 de 15 mm, de esta manera la rueda y uno de los engranajes de 16 dientes girarán solidariamente y podrá recibir la potencia del micro-stepper. Con ello, nuestra parte trasera quedaría tal que así.
 
 | Antes | Después |
 | --- | --- |
