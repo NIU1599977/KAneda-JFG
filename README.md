@@ -190,4 +190,11 @@ Yolo es la tecnologia que usaremos para nuestra implementación para el tema de 
 
 ## Autoría
 
+| Nombre | NIU | Cargo |
+| --- | --- | --- |
+| Francesc Gallego Palomo | 1467414 | Responsable de Visión por Computador |
+| Göran Hatero Comino | 1600920 | Responsable de Software |
+| Aleix Valdivieso González | 1522975 | Responsable de Diseño 3D |
+| Jordi Pradas López | 1599977 | Responsable de Hardware |
+
 ## Bibliografía
