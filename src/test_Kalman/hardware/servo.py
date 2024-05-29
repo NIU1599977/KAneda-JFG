@@ -23,3 +23,6 @@ def test():
 
 def turn(value):
     servo.value = value
+
+
+servo.mid()

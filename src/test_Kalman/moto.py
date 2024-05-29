@@ -1,6 +1,6 @@
-import hardware.imu.py
-import hardware.servo.py
-import hardware.stepper.py
+import hardware.imu_file
+import hardware.servo
+import hardware.stepper
 import math
 import smbus
 import time
@@ -12,6 +12,16 @@ GYRO_AMOUNT = 0.996
 SPEED = 10
 TURN_TIME = 0.01
 
+#IBT_2
+RPWM = 12
+LPWM = 32
+L_EN = 8
+R_EN = 10
+FREQ_IBT = 50
+
+#POLULU
+MAX_ANG = 136
+
 class Moto:
     def __init__(self):
         self.K1 = 115
@@ -21,12 +31,20 @@ class Moto:
         self.vertical = False
         self.angle = 0.0
         self.acc_angle = 0.0
-        self.s1 = stepper.Stepper([31,33,35,37])
-        self.s2 = stepper.Stepper([18,22,24,26])
-        self.servo = Servo(17)
+        # self.s1 = stepper.Stepper([31,33,35,37])
+        # self.s2 = stepper.Stepper([18,22,24,26])
+        self.s1 = 0
+        self.s2 = 0
+        self.servo = 0
         GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(8, GPIO.OUT)
-        GPIO.setup(10, GPIO.OUT)
+        #IBT_2
+        GPIO.setup(RPWM, GPIO.OUT)
+        GPIO.setup(LPWM, GPIO.OUT)
+        GPIO.setup(L_EN, GPIO.OUT)
+        GPIO.setup(R_EN, GPIO.OUT)
+        self.rpwm = GPIO.PWM(RPWM, FREQ_IBT)
+        self.lpwm = GPIO.PWM(LPWM, FREQ_IBT)
+
         # Configuración inicial del PID
         self.kp = 0.1  # Constante proporcional
         self.ki = 0.01  # Constante integral
@@ -96,7 +114,7 @@ class Moto:
     def enc_read(): # TODO: Entender para qué sirve esto y si hace falta (leer encoder del stepper).
         pass
         
-    def move(distance, angle):
+    def move(self, distance, angle):
         # TODO: Pasar ángulo a valor entre 0 y 1.
         # TODO: Pasar distancia a número de iteraciones.
         move_time = abs(distance / SPEED)
@@ -111,23 +129,36 @@ class Moto:
             self.s1.move(distance) # Cambiar por s2 si no es este stepper.
             time.sleep(move_time)
     def move_volanteInercia(self, angulo, vel_angular):
+        GPIO.output(L_EN, GPIO.HIGH)
+        GPIO.output(R_EN, GPIO.HIGH)
+        #print("hola")
         if (angulo != 0):
-            
+            # error = -1 * vel_angular
+            # proporcional = self.kp * error;
+            # integral += self.ki * error;
+            # derivativo = self.kd * (error - self.error_anterior)
+            # salida = proporcional + integral + derivativo
+            # salida = max(min(salida, 5), 0)
+            salida = 0.05
+            # print("TIEMPO uwu --> ", salida)
+            vel_deseada = vel_angular*1.05 
+            #dc = vel_deseada/MAX_ANG*100
+            dc = 75
             if (angulo > 0): #Voy a asumir que cuando es > 0 se inclina a la derecha
-                # Asumo que este mueve el volante de inercia a la izquierda
-                GPIO.output(8, GPIO.HIGH)
-                GPIO.output(10, GPIO.LOW)
+                self.lpwm.stop()                
+# Asumo que este mueve el volante de inercia a la izquierda
+                self.rpwm.start(dc)
                 time.sleep(salida)
                 # Frenamos
-                GPIO.output(8, GPIO.LOW)
-                GPIO.output(10, GPIO.LOW)
-                time.sleep(salida)
+                #self.rpwm.stop()
+                #time.sleep(salida)
             else: #Se está inclinando hacia la izquierda, asumo
-                GPIO.output(8, GPIO.HIGH)
-                GPIO.output(10, GPIO.LOW)
+                self.rpwm.stop()
+                self.lpwm.start(dc)
                 time.sleep(salida)
                 # Frenamos
-                GPIO.output(8, GPIO.LOW)
-                GPIO.output(10, GPIO.LOW)
-                time.sleep(salida)
-            self.error_anterior = error;
+                #self.lpwm.stop()
+                #time.sleep(salida)
+            # self.error_anterior = error;
+        GPIO.output(L_EN, GPIO.LOW)
+        GPIO.output(R_EN, GPIO.LOW)

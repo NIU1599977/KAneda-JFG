@@ -1,6 +1,6 @@
-import hardware.imu.py
-import hardware.servo.py
-import hardware.stepper.py
+import hardware.imu_file as imu
+import hardware.servo as servo
+import hardware.stepper as stepper
 import math
 import smbus
 import time
@@ -23,7 +23,7 @@ class Moto:
         self.acc_angle = 0.0
         self.s1 = stepper.Stepper([31,33,35,37])
         self.s2 = stepper.Stepper([18,22,24,26])
-        self.servo = Servo(17)
+        self.servo = servo.Servo(17)
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(8, GPIO.OUT)
         GPIO.setup(10, GPIO.OUT)
@@ -111,8 +111,17 @@ class Moto:
             self.s1.move(distance) # Cambiar por s2 si no es este stepper.
             time.sleep(move_time)
     def move_volanteInercia(self, angulo, vel_angular):
+        salida = 0
+        derivativo = 0
+        print("Angulo --> ", angulo)
+        print("Velocidad angular --> ", vel_angular)
         if (angulo != 0):
-            
+            error = -1 * vel_angular
+            proporcional = self.kp * error;
+            self.integral += self.ki * error;
+            derivativo = self.kd * (error - self.error_anterior)
+            salida = proporcional + self.integral + derivativo
+            salida = max(min(salida, 5), 0)
             if (angulo > 0): #Voy a asumir que cuando es > 0 se inclina a la derecha
                 # Asumo que este mueve el volante de inercia a la izquierda
                 GPIO.output(8, GPIO.HIGH)

@@ -1,7 +1,7 @@
 from gpiozero import Servo
 from time import sleep
  
-GPIO = 17
+GPIO = 21
 
 servo = Servo(GPIO)
 

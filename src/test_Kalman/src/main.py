@@ -26,7 +26,6 @@ def main():
             aa, bb = My_Mpu.get_angle(units = 'deg')
             print("Theta [deg] = ", int(aa)," Theta_dot [deg/s] = ", int(bb), " loop time[ms] = ", np.round(dt, 2))
             motoClass.move_volanteInercia(aa, math.radians(bb))  
-            print("ya lo he hecho")
         t_init = t_now
 
 if __name__ == '__main__':
