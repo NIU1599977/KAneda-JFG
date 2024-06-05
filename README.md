@@ -198,3 +198,4 @@ Yolo es la tecnologia que usaremos para nuestra implementación para el tema de 
 | Jordi Pradas López | 1599977 | Responsable de Hardware |
 
 ## Bibliografía
+[Cross-Compiling Tensorflow Lite](https://www.tensorflow.org/lite/guide/build_cmake_arm?hl=es)
