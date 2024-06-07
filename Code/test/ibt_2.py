@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 
-#### CÓDIGO NUEVO
+
 
 GPIO.cleanup()
 print("Cleaned")
