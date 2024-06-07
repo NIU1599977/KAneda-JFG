@@ -19,8 +19,9 @@ L_EN = 8
 R_EN = 10
 FREQ_IBT = 50
 
-#POLULU
-MAX_ANG = 136
+#POLOLU
+MAX_ANG = 136 # ???
+MAX_RPM = 1300
 
 class Moto:
     def __init__(self):
@@ -42,6 +43,8 @@ class Moto:
         GPIO.setup(R_EN, GPIO.OUT)
         self.rpwm = GPIO.PWM(RPWM, FREQ_IBT)
         self.lpwm = GPIO.PWM(LPWM, FREQ_IBT)
+        self.rpwm.start(0)
+        self.lpwm.start(0)
 
         # Configuración inicial del PID
         self.kp = 0.1  # Constante proporcional
@@ -120,26 +123,20 @@ class Moto:
         GPIO.output(L_EN, GPIO.HIGH)
         GPIO.output(R_EN, GPIO.HIGH)
         units = 'deg'
-        angulo, bb = My_Mpu.get_angle(units)
+        angulo, bb = My_Mpu.get_angle(units) # bb -> velocidad angular a la que debe girar el motor
         print("Angulo [deg] = ", int(angulo)," Velocidad angular [deg/s] = ", int(bb), " loop time[ms] = ", np.round(dt, 2))
-        vel_angular = math.radians(bb)
-        salida = 0
         
         if (angulo != 0):
-            salida = 0.05
-            #vel_deseada = vel_angular*1.05 
-            #dc = vel_deseada/MAX_ANG*100
-            dc = 80
-            if (angulo > 0): #Voy a asumir que cuando es > 0 se inclina a la derecha
-                self.lpwm.stop()                
-                self.rpwm.start(dc)
-                time.sleep(salida)
-                # Frenamos
-                #self.rpwm.stop()
-                #time.sleep(salida)
+            actual_rpm = math.fabs((bb / 360.0) * 60) # Conversión de deg/s -> rpm
+            dc = max(1.0, (actual_rpm / MAX_RPM)) * 100
+
+            if (angulo > 0): #Voy a asumir que cuando es > 0 se inclina a la derecha               
+                self.lpwm.ChangeDutyCycle(0)
+                self.rpwm.ChangeDutyCycle(dc)
+
             else: #Se está inclinando hacia la izquierda, asumo
-                self.rpwm.stop()
-                self.lpwm.start(dc)
-                time.sleep(salida)
+                self.rpwm.ChangeDutyCycle(0)
+                self.lpwm.ChangeDutyCycle(dc)
+
         GPIO.output(L_EN, GPIO.LOW)
         GPIO.output(R_EN, GPIO.LOW)
