@@ -27,6 +27,7 @@ def main():
                 #volante_inercia = threading.Thread(target=motoClass.move_volanteInercia, args=(My_Mpu, dt))
                 #volante_inercia.start()
             t_init = t_now
+            #sleep(0.003) #https://github.com/NischalSehrawat/Self-Balancing-Segway-Robot, subirlo para ver si se vuelve más estable
     except KeyboardInterrupt:
         GPIO.cleanup()
     
