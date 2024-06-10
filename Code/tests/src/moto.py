@@ -21,7 +21,9 @@ FREQ_IBT = 50
 
 #POLOLU
 MAX_ANG = 136 # ???
-MAX_RPM = 1300
+#MAX_RPM = 1300
+MAX_RPM = 10
+RPM_OFFSET = 350
 
 class Moto:
     def __init__(self):
@@ -127,15 +129,16 @@ class Moto:
         
         if (angulo != 0):
             actual_rpm = math.fabs((bb / 360.0) * 60) # Conversión de deg/s -> rpm
-            dc = max(1.0, (actual_rpm / MAX_RPM)) * 100
-
-            if (angulo > 0): #Voy a asumir que cuando es > 0 se inclina a la derecha               
+            dc_uncontrolled = int((actual_rpm / MAX_RPM) * 100)
+            dc = min(100, dc_uncontrolled)
+            print("rpm: ", dc_uncontrolled, " dc: ", dc)
+            if (angulo < 0): #Voy a asumir que cuando es > 0 se inclina a la derecha               
                 self.lpwm.stop()
                 self.rpwm.start(dc)
 
             else: #Se está inclinando hacia la izquierda, asumo
                 self.rpwm.stop()
                 self.lpwm.start(dc)
-
+            
         GPIO.output(L_EN, GPIO.LOW)
         GPIO.output(R_EN, GPIO.LOW)

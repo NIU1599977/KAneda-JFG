@@ -7,7 +7,8 @@ from time import sleep
  
 GPIO = 9
 
-servo = Servo(GPIO, -1, 0.00049, 0.002, 0.02, gpiozero.pins.pigpio.PiGPIOFactory())
+#servo = Servo(GPIO, -1, 0.00049, 0.002, 0.02, gpiozero.pins.pigpio.PiGPIOFactory())
+servo = Servo(GPIO)
 print(servo.value)
 
 def test():
