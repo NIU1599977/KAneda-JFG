@@ -1,6 +1,6 @@
-import HW_Code.imu_file as imu
-import HW_Code.servo as servo
-import HW_Code.stepper as stepper
+import libraries.imu_file as imu
+import libraries.servo as servo
+import libraries.stepper as stepper
 import math
 import smbus
 import time
