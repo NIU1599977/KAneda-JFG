@@ -1,0 +1,22 @@
+## Instalar Dependencias
+
+1. Instalar git: `sudp apt install git`
+2. Instalar gestor de librerías de python: `sudo apt install python3-pip`
+3. Instalar librería smbus: `sudo apt install python3-smbus`
+4. Instalar librería gpiozero: `sudo apt install python3-gpiozero`
+5. Instalar librería mpu6050: `pip3 install mpu6050-raspberrypi`
+6. Instalar librería numpy`sudo apt install python3-numpy`
+
+## Activar Interfaces de Comunicación Hardware
+
+1. Entrar en el asistente de configuración de la Raspberry: `sudo raspi-config`
+2. Abrir _Interfacing Options_.
+3. Activar cámara (_Enable Camera_).
+4. Activar I2C.
+5. Abrir _Advanced Options_.
+6. Clicar _Expand Filesystem_.
+
+## SI
+
+1. `sudo systemctl enable pigpiod`
+2. `sudo pigpiod`
