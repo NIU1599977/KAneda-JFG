@@ -5,12 +5,14 @@ from mpu6050 import mpu6050
 import RPi.GPIO as GPIO
 
 from libraries.kalman import Kalman 
+from libraries.remrc_balancing import Remrc
 from src.moto import Moto
 
 
 def main():
     my_mpu = mpu6050(0x68) # Initialize MPU to get acceleration and rotation data
     My_Mpu = Kalman(my_mpu) # Object for getting theta and theta_dot
+    # My_Mpu = Remrc(my_mpu)
     t_init = datetime.now() # Time now
 
     sleep(0.5)

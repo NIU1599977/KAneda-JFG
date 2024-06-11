@@ -23,19 +23,13 @@ FREQ_IBT = 50
 MAX_ANG = 136 # ???
 #MAX_RPM = 1300
 MAX_RPM = 10
-RPM_OFFSET = 350
-
 class Moto:
     def __init__(self):
-        self.K1 = 115
-        self.K2 = 15.00
-        self.K3 = 8.00
-        self.K4 = 0.60
-        self.vertical = False
         self.angle = 0.0
         self.acc_angle = 0.0
         self.s1 = stepper.Stepper([31,33,35,37])
         self.servo = servo
+        self.gyroXfilt = 0
 
         GPIO.setmode(GPIO.BOARD)
         #IBT_2
@@ -120,18 +114,31 @@ class Moto:
             self.s1.move(self.s1.forward, iteraciones, move_time) 
             time.sleep(move_time)
         
-    def move_volanteInercia(self, My_Mpu, dt):
+    def move_volanteInercia(self, filter, dt):
         GPIO.output(L_EN, GPIO.HIGH)
         GPIO.output(R_EN, GPIO.HIGH)
-        units = 'deg'
-        angulo, bb = My_Mpu.get_angle(units) # bb -> velocidad angular a la que debe girar el motor
+        ###############
+        ### KALMAN ####
+        # units = 'deg'
+        # angulo, bb = filter.get_angle(units) # bb -> velocidad angular a la que debe girar el motor
+
+        ###############
+        ### remrc  ####
+        angulo, gyX = filter.get_angle()
+        # gyroX = GyX / 131.0; // Convert to deg/s
+        # gyroX = gyX / 131.0 -> en teoria no hace falta, esto ya lo hace la librería
+        # gyroXfilt = alpha * gyroX + (1 - alpha) * gyroXfilt;
+        self.gyroXfilt = filter.alpha * gyX + (1 - filter.alpha) * self.gyroXfilt
+        # int pwm = constrain(K1 * robot_angle + K2 * gyroXfilt + K3 * motor_speed + K4 * motor_pos, -255, 255); 
+        bb = filter.K1 * angulo + filter.K2 * self.gyroXfilt #  + filter.K3 * motor_speed -> en teoria esto es lo rapido que va la moto
+
         print("Angulo [deg] = ", int(angulo)," Velocidad angular [deg/s] = ", int(bb), " loop time[ms] = ", np.round(dt, 2))
         
         if (angulo != 0):
             actual_rpm = math.fabs((bb / 360.0) * 60) # Conversión de deg/s -> rpm
             dc_uncontrolled = int((actual_rpm / MAX_RPM) * 100)
-            dc = min(100, dc_uncontrolled)
-            print("rpm: ", dc_uncontrolled, " dc: ", dc)
+            dc = min(60, dc_uncontrolled)
+            print("rpm: ", actual_rpm, " dc: ", dc)
             if (angulo < 0): #Voy a asumir que cuando es > 0 se inclina a la derecha               
                 self.lpwm.stop()
                 self.rpwm.start(dc)
