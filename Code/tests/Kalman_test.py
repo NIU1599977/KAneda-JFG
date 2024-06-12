@@ -20,12 +20,18 @@ def main():
 
     print("Starting the system..!!!")
     motoClass = Moto()
+
+    My_Mpu.angle_setup() #remrc
+
     try:
         while 1:
+
             t_now = datetime.now()
             dt = (t_now - t_init).total_seconds()*1000 #Time in millis
             if dt > 0:
-                motoClass.move_volanteInercia(My_Mpu, dt)
+                My_Mpu.calibrate() #remrc
+                My_Mpu.get_angle(dt)
+                #motoClass.move_volanteInercia(My_Mpu, dt)
                 #volante_inercia = threading.Thread(target=motoClass.move_volanteInercia, args=(My_Mpu, dt))
                 #volante_inercia.start()
             t_init = t_now

@@ -1,4 +1,7 @@
 import math
+import time
+import numpy as np
+
 class Remrc:
   def __init__(self, my_mpu):
         self.my_mpu = my_mpu # Note that the MPU return data in [m/s**2] for accelerometer and [deg/s] for gyro
@@ -10,9 +13,11 @@ class Remrc:
         self.gyro_amount = 0.996
         self.loop_time = 10
         self.vertical = False
+        self.GyX_offset = 0
+        
 
   #void angle_calc() {
-  def get_angle(self):
+  def get_angle(self, dt):
 
     # Wire.beginTransmission(MPU6050);
     # Wire.write(ACCEL_YOUT_H);                       
@@ -47,7 +52,13 @@ class Remrc:
     if (abs(robot_angle) > 10): self.vertical = False
     if (abs(robot_angle) < 0.4): self.vertical = True
 
-    return robot_angle, GyX
+    # gyroXfilt = alpha * gyroX + (1 - alpha) * gyroXfilt;
+    self.gyroXfilt = self.alpha * GyX + (1 - self.alpha) * self.gyroXfilt
+    # int pwm = constrain(K1 * robot_angle + K2 * gyroXfilt + K3 * motor_speed + K4 * motor_pos, -255, 255); 
+    bb = abs(self.K1 * robot_angle + self.K2 * self.gyroXfilt) #  + filter.K3 * motor_speed -> en teoria esto es lo rapido que va la moto
+    print("Angulo [deg] = ", int(robot_angle)," Velocidad angular [deg/s] = ", int(bb), " loop time[ms] = ", np.round(dt, 2))
+
+    return robot_angle, GyX, bb
 
   # def angle_calc(self):
   #   acc_data = imu.get_data()
@@ -82,10 +93,15 @@ class Remrc:
   }
   """
 
-  # def angle_setup(self):
-  #   for i in range(1024): # 1024 ?
-  #     self.angle_calc()
-  #     time.sleep(0.003)
+  def angle_setup(self):
+    GyX_offset_sum = 0
+    time.sleep(0.1)
+    for i in range(1024): # 1024 ?
+      _, GyX, _ = self.get_angle()
+      GyX_offset_sum += GyX
+      time.sleep(0.003)
+    self.GyX_offset = GyX_offset_sum >> 10
+    print("GyX offset: ", self.GyX_offset)
 
   def calibrate(self): # Adaptación de Tuning() (functions.ino)
     calibrated = False

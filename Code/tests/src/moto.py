@@ -122,20 +122,21 @@ class Moto:
 
         ###############
         ### remrc  ####
-        angulo, gyX = filter.get_angle()
-        # gyroX = GyX / 131.0; // Convert to deg/s
-        # gyroX = gyX / 131.0 -> en teoria no hace falta, esto ya lo hace la librería
-        # gyroXfilt = alpha * gyroX + (1 - alpha) * gyroXfilt;
-        self.gyroXfilt = filter.alpha * gyX + (1 - filter.alpha) * self.gyroXfilt
-        # int pwm = constrain(K1 * robot_angle + K2 * gyroXfilt + K3 * motor_speed + K4 * motor_pos, -255, 255); 
-        bb = filter.K1 * angulo + filter.K2 * self.gyroXfilt #  + filter.K3 * motor_speed -> en teoria esto es lo rapido que va la moto
+        angulo, _, dc = filter.get_angle()
+        # # gyroX = GyX / 131.0; // Convert to deg/s
+        # # gyroX = gyX / 131.0 -> en teoria no hace falta, esto ya lo hace la librería
+        # # gyroXfilt = alpha * gyroX + (1 - alpha) * gyroXfilt;
+        # self.gyroXfilt = filter.alpha * gyX + (1 - filter.alpha) * self.gyroXfilt
+        # # int pwm = constrain(K1 * robot_angle + K2 * gyroXfilt + K3 * motor_speed + K4 * motor_pos, -255, 255); 
+        # bb = abs(filter.K1 * angulo + filter.K2 * self.gyroXfilt) #  + filter.K3 * motor_speed -> en teoria esto es lo rapido que va la moto
 
-        print("Angulo [deg] = ", int(angulo)," Velocidad angular [deg/s] = ", int(bb), " loop time[ms] = ", np.round(dt, 2))
+        # print("Angulo [deg] = ", int(angulo)," Velocidad angular [deg/s] = ", int(bb), " loop time[ms] = ", np.round(dt, 2))
         
         if (angulo != 0):
-            actual_rpm = math.fabs((bb / 360.0) * 60) # Conversión de deg/s -> rpm
-            dc_uncontrolled = int((actual_rpm / MAX_RPM) * 100)
-            dc = min(60, dc_uncontrolled)
+            #actual_rpm = math.fabs((bb / 360.0) * 60) # Conversión de deg/s -> rpm
+            #dc_uncontrolled = int((actual_rpm / MAX_RPM) * 100)
+            #dc = min(60, dc_uncontrolled)
+            actual_rpm = 0
             print("rpm: ", actual_rpm, " dc: ", dc)
             if (angulo < 0): #Voy a asumir que cuando es > 0 se inclina a la derecha               
                 self.lpwm.stop()
