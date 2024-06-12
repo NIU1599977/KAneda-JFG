@@ -25,11 +25,8 @@ MAX_ANG = 136 # ???
 MAX_RPM = 10
 class Moto:
     def __init__(self):
-        self.angle = 0.0
-        self.acc_angle = 0.0
         self.s1 = stepper.Stepper([31,33,35,37])
         self.servo = servo
-        self.gyroXfilt = 0
 
         GPIO.setmode(GPIO.BOARD)
         #IBT_2
@@ -39,6 +36,11 @@ class Moto:
         GPIO.setup(R_EN, GPIO.OUT)
         self.rpwm = GPIO.PWM(RPWM, FREQ_IBT)
         self.lpwm = GPIO.PWM(LPWM, FREQ_IBT)
+        GPIO.output(L_EN, GPIO.HIGH)
+        GPIO.output(R_EN, GPIO.HIGH)
+
+        self.rpwm.start(0)
+        self.lpwm.start(0)
 
 
         # Configuración inicial del PID
@@ -47,23 +49,6 @@ class Moto:
         self.kd = 0.001  # Constante derivativa
         self.error_anterior = 0
         self.integral = 0
-
-    def angle_calc(self):
-        acc_data = imu.get_data()
-        # Revisar por posibles offsets o usar valores raw (ej. gyro_x)
-        self.angle += acc_data["Gx"] * LOOP_TIME / 1000 / 65.536
-        self.acc_angle = -math.atan2(acc_data["Ay"], -acc_data["Az"]) * 57.2958
-        self.angle = self.angle * self.GYRO_AMOUNT + self.acc_angle * (1.0 - self.GYRO_AMOUNT)
-
-        if abs(self.angle) > 10:
-            self.vertical = False
-        if abs(self.angle) < 0.4:
-            self.vertical = True
-
-    def angle_setup(self):
-        for i in range(1024): # 1024 ?
-            self.angle_calc()
-            time.sleep(0.003)
 
     
         
@@ -113,8 +98,8 @@ class Moto:
             time.sleep(move_time)
         
     def move_volanteInercia(self, filter, dt):
-        GPIO.output(L_EN, GPIO.HIGH)
-        GPIO.output(R_EN, GPIO.HIGH)
+        # GPIO.output(L_EN, GPIO.HIGH)
+        # GPIO.output(R_EN, GPIO.HIGH)
         ###############
         ### KALMAN ####
         # units = 'deg'
@@ -122,7 +107,7 @@ class Moto:
 
         ###############
         ### remrc  ####
-        angulo, _, dc = filter.get_angle()
+        angulo, _, dc = filter.get_angle(dt)
         # # gyroX = GyX / 131.0; // Convert to deg/s
         # # gyroX = gyX / 131.0 -> en teoria no hace falta, esto ya lo hace la librería
         # # gyroXfilt = alpha * gyroX + (1 - alpha) * gyroXfilt;
@@ -130,7 +115,7 @@ class Moto:
         # # int pwm = constrain(K1 * robot_angle + K2 * gyroXfilt + K3 * motor_speed + K4 * motor_pos, -255, 255); 
         # bb = abs(filter.K1 * angulo + filter.K2 * self.gyroXfilt) #  + filter.K3 * motor_speed -> en teoria esto es lo rapido que va la moto
 
-        # print("Angulo [deg] = ", int(angulo)," Velocidad angular [deg/s] = ", int(bb), " loop time[ms] = ", np.round(dt, 2))
+        # print("Angulo [deg] = ", int(angulo)," Velocidad angular [deg/s] = ", int(dc), " loop time[ms] = ", np.round(dt, 2))
         
         if (angulo != 0):
             #actual_rpm = math.fabs((bb / 360.0) * 60) # Conversión de deg/s -> rpm
@@ -139,12 +124,12 @@ class Moto:
             actual_rpm = 0
             print("rpm: ", actual_rpm, " dc: ", dc)
             if (angulo < 0): #Voy a asumir que cuando es > 0 se inclina a la derecha               
-                self.lpwm.stop()
-                self.rpwm.start(dc)
+                self.lpwm.ChangeDutyCycle(0)
+                self.rpwm.ChangeDutyCycle(dc)
 
             else: #Se está inclinando hacia la izquierda, asumo
-                self.rpwm.stop()
-                self.lpwm.start(dc)
+                self.rpwm.ChangeDutyCycle(0)
+                self.lpwm.ChangeDutyCycle(dc)
             
-        GPIO.output(L_EN, GPIO.LOW)
-        GPIO.output(R_EN, GPIO.LOW)
+        #GPIO.output(L_EN, GPIO.LOW)
+        #GPIO.output(R_EN, GPIO.LOW)
