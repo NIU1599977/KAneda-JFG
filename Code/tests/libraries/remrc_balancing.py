@@ -87,3 +87,44 @@ class Remrc:
   #     self.angle_calc()
   #     time.sleep(0.003)
 
+  def calibrate(self): # Adaptación de Tuning() (functions.ino)
+    calibrated = False
+    while not calibrated:
+        pisae = input("Introduce la variable a calibrar ('p','i','s','a') o 'e' si terminaste la calibración.")
+        if pisae == 'p':
+            accion = input("Indica + para incrementar o - para decrementar.")
+            if accion == '+':
+                self.K1 += 1
+            elif accion == '-':
+                self.K1 -= 1
+            else:
+                print("La tecla introducida no es correcta, empiece de nuevo.")
+        elif pisae == 'i':
+            accion = input("Indica + para incrementar o - para decrementar.")
+            if accion == '+':
+                self.K2 += 0.5
+            elif accion == '-':
+                self.K2 -= 0.5
+            else:
+                print("La tecla introducida no es correcta, empiece de nuevo.")
+        elif pisae == 's':
+            accion = input("Indica + para incrementar o - para decrementar.")
+            if accion == '+':
+                self.K3 += 0.2
+            elif accion == '-':
+                self.K3 -= 0.2
+            else:
+                print("La tecla introducida no es correcta, empiece de nuevo.")
+        elif pisae == 'a':
+            accion = input("Indica + para incrementar o - para decrementar.")
+            if accion == '+':
+                self.K4 += 0.05
+            elif accion == '-':
+                self.K4 -= 0.05
+            else:
+                print("La tecla introducida no es correcta, empiece de nuevo.")
+        elif pisae == 'e':
+            calibrated = True
+        else:
+            print("La tecla introducida no es correcta, empiece de nuevo.")
+        print(f"K1: {self.K1}\nK2: {self.K2}\nK3: {self.K3}\nK4: {self.K4}") 

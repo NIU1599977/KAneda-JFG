@@ -47,8 +47,6 @@ class Moto:
         self.kd = 0.001  # Constante derivativa
         self.error_anterior = 0
         self.integral = 0
-    
-    
 
     def angle_calc(self):
         acc_data = imu.get_data()
