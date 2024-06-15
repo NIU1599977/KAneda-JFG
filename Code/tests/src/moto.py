@@ -81,21 +81,24 @@ class Moto:
 
         
     def seguir_ruta(self):
-        distance = 5 # 5 iteraciones
-        angle = 0
-        iteraciones = self.distance_to_steps(distance)
-        print("ITERACIONES --> ", iteraciones)
-        move_time = abs(distance / SPEED)
-        turn_time = abs(angle * TURN_TIME)
-        if angle > 0:
-            self.servo.turn(angle)
-            time.sleep(turn_time)
-        else:
-            self.servo.turn(0)
+        movimientos = [[512, 0], [100, 0.5], [512, 0]]
+        for elemento in movimientos:
+            iteraciones = elemento[0]
+            angulo = elemento[1]
+            
+            #self.servo.value = angulo;
+            
+            time.sleep(0.5)
 
-        if distance > 0:
-            self.s1.move(self.s1.forward, iteraciones, move_time) 
-            time.sleep(move_time)
+            if iteraciones > 0:
+                self.s1.move(self.s1.forward, iteraciones)
+            elif iteraciones < 0:
+                aux = -1 * iteraciones
+                self.s1.move(self.s1.reverse, aux)
+            time.sleep(1)
+
+
+    
         
     def move_volanteInercia(self, angulo, bb, dt):
         # K1 = 45

@@ -5,14 +5,12 @@ import numpy as np
 class Remrc:
   def __init__(self, my_mpu):
         self.my_mpu = my_mpu # Note that the MPU return data in [m/s**2] for accelerometer and [deg/s] for gyro
-        self.K1 = 25
-        self.K2 = 10.00
+        self.K1 = 115
+        self.K2 = 15.00
         self.K3 = 8.00
         self.K4 = 0.60
         self.alpha = 0.4
         self.gyro_amount = 0.996
-        self.loop_time = 10
-        self.vertical = False
         self.GyX_offset = 0
         self.robot_angle = 0
         self.gyroXfilt = 0
@@ -52,14 +50,14 @@ class Remrc:
     #robot_angle = robot_angle * Gyro_amount + Acc_angle * (1.0 - Gyro_amount);
     self.robot_angle = self.robot_angle * self.gyro_amount + Acc_angle * (1.0 - self.gyro_amount)
     # print("angle: ", self.robot_angle)
-    if (abs(self.robot_angle) > 10): self.vertical = False
-    if (abs(self.robot_angle) < 0.4): self.vertical = True
-
-    # gyroXfilt = alpha * gyroX + (1 - alpha) * gyroXfilt;
-    self.gyroXfilt = self.alpha * GyX + (1 - self.alpha) * self.gyroXfilt
-    # int pwm = constrain(K1 * robot_angle + K2 * gyroXfilt + K3 * motor_speed + K4 * motor_pos, -255, 255); 
-    bb = abs(self.K1 * self.robot_angle + self.K2 * self.gyroXfilt) #  + filter.K3 * motor_speed -> en teoria esto es lo rapido que va la moto
-    bb = min(bb, 80)
+    if (abs(self.robot_angle) > 10): 
+        bb = 0
+    else: #if (abs(self.robot_angle) < 0.4): 
+        # gyroXfilt = alpha * gyroX + (1 - alpha) * gyroXfilt;
+        self.gyroXfilt = self.alpha * GyX + (1 - self.alpha) * self.gyroXfilt
+        # int pwm = constrain(K1 * robot_angle + K2 * gyroXfilt + K3 * motor_speed + K4 * motor_pos, -255, 255); 
+        bb = abs(self.K1 * self.robot_angle + self.K2 * self.gyroXfilt / 10) #  + filter.K3 * motor_speed -> en teoria esto es lo rapido que va la moto
+        bb = max(0, min(bb, 40))
     # print("Angulo [deg] = ", int(self.robot_angle)," Velocidad angular [deg/s] = ", int(bb))
 
     return self.robot_angle, GyX, bb

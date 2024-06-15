@@ -2,6 +2,7 @@
 Archivo de configuración y declaración de funciones del Stepper 28BYJ-48.
 """
 import RPi.GPIO as GPIO
+import sys
 import time
 
 HALFSTEP_SEQ_REV = [
@@ -47,5 +48,14 @@ class Stepper:
                     GPIO.output(self.control_pins[pin], direction[halfstep][pin])
                 time.sleep(speed_time)
         GPIO.cleanup()
-        
-            
+
+def test():
+    test_stepper = Stepper([31,33,35,37])
+    test_stepper.move(test_stepper.forward)
+    time.sleep(0.5)
+    test_stepper.move(test_stepper.reverse)
+    time.sleep(0.5)
+
+if len(sys.argv) == 2:
+    if sys.argv[1] == '-t':
+        test()
