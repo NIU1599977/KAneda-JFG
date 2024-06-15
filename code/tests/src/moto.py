@@ -1,4 +1,3 @@
-import libraries.imu_file as imu
 import libraries.servo as servo
 import libraries.stepper as stepper
 import math
