@@ -5,7 +5,9 @@
 3. Instalar librería smbus: `sudo apt install python3-smbus`
 4. Instalar librería gpiozero: `sudo apt install python3-gpiozero`
 5. Instalar librería mpu6050: `pip3 install mpu6050-raspberrypi`
-6. Instalar librería numpy`sudo apt install python3-numpy`
+6. Instalar librería numpy: `sudo apt install python3-numpy`
+7. Instalar librería filterpy: `pip3 install filterpy`
+8. Instalar librería openblas: `sudo apt install libopenblas-dev`
 
 ## Activar Interfaces de Comunicación Hardware
 
