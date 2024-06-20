@@ -8,6 +8,9 @@
 6. Instalar librería numpy: `sudo apt install python3-numpy`
 7. Instalar librería filterpy: `pip3 install filterpy`
 8. Instalar librería openblas: `sudo apt install libopenblas-dev`
+9. Instalar librería OpenCV: `pip3 install opencv-python`
+
+\*Es posible que en ocasiones haya que añadir el parámetro `--break-system-packages` a los comandos `pip3 install <package>`
 
 ## Activar Interfaces de Comunicación Hardware
 
