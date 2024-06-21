@@ -12,7 +12,7 @@ from src.moto import Moto
 
 def kalman(motoClass):
     my_mpu = mpu6050(0x68) # Initialize MPU to get acceleration and rotation data
-    filter = Kalman(my_mpu) # Object for getting theta and theta_dot
+    filter = Kalman(my_mpu, True) # Object for getting theta and theta_dot
     t_init = datetime.now() # sTime now
 
     sleep(0.1)
@@ -22,16 +22,17 @@ def kalman(motoClass):
     try:
         while True:
             t_now = datetime.now()
-            dt = (t_now - t_init).total_seconds()*1000 #Time in millis
+            dt = (t_now - t_init).total_seconds() #Time in seconds
             # Obtener datos del kalman
             angle_estimated, angular_velocity_estimated = filter.get_angles(dt)   
-            # angle_estimated, angular_velocity_estimated = My_Mpu.get_angle('deg')
+            # angle_estimated, angular_velocity_estimated = filter.get_angle(dt, 'deg')
 
             # Imprime o utiliza el estado estimado
-            print(f"Angle: {angle_estimated}, Angular Velocity: {angular_velocity_estimated}, dt: {np.round(dt, 2)}")
 
-            motoClass.move_volanteInercia(angle_estimated, angular_velocity_estimated)
+            dc = motoClass.move_volanteInercia(angle_estimated, angular_velocity_estimated)
             
+            print(f"Angle: {np.round(angle_estimated, 2)}, Angular Velocity: {np.round(angular_velocity_estimated, 2)}, dt: {np.round(dt, 2)}, dc: {np.round(dc, 2)}")
+
             t_init = t_now
             # Pausar para simular el intervalo de tiempo (ejemplo: 10 ms)
             sleep(0.01) 
