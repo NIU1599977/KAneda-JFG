@@ -12,8 +12,7 @@ class Kalman:
         if calibrate:
             calib = []
             print("Starting MPU calibration..."); sleep(1)
-            gyro_data = []
-            accel_data = []
+
             for i in range(100):
 
                 xx = [mpu.get_accel_data()['y'], mpu.get_accel_data()['z'] - 9.8,
@@ -32,7 +31,7 @@ class Kalman:
         
         for i in range(100):
             
-            f1 = np.arctan((mpu.get_accel_data()['y'] - self.error[0]) / (mpu.get_accel_data()['z'] - self.error[1]))
+            f1 = np.arctan2((mpu.get_accel_data()['y'] - self.error[0]), (mpu.get_accel_data()['z'] - self.error[1]))
             f2 = np.deg2rad(mpu.get_gyro_data()['x'] - self.error[2]) # Gyro bias [rad] 
             
             R.append([f1,f2]) # 100 samples of angle and angular velocity (bias in gyro) in [rad] and [rad/s] respectively
@@ -55,9 +54,11 @@ class Kalman:
         self.kf.H = np.eye(2) # matriz identidad
         
         # Matriz de covarianza del proceso
-        q_var = 0.006  # Varianza del proceso, si vemos que driftea mucho es porque tenemos que aumentarlo, si vemos que va muy lento es porque tenemos que bajarlo
-        self.kf.Q = Q_discrete_white_noise(dim=2, dt=dt, var=q_var) # process noise covarianze matrix
-        # self.Q = np.diag([0.01, 0.03]) # si va lento, hay que bajar 0.01. si driftea mucho hay que aumentar 0.03
+        self.q_var = 0.003  # Varianza del proceso, si vemos que driftea mucho es porque tenemos que aumentarlo, si vemos que va muy lento es porque tenemos que bajarlo
+        self.kf.Q = Q_discrete_white_noise(dim=2, dt=dt, var=self.q_var) # process noise covarianze matrix
+        # self.Q = np.diag([a, b]) 
+        # si angulo estimado empieza a driftear, hay que subir b.
+        # si angulo estimado se actualiza lentamente hay que bajar a para hacerlo más responsivo
         
         # Matriz de covarianza de la observación
         self.kf.R = 0.03  # si es muy alto, el filtro responderá muy lento ya que no tendrá en cuenta las medidas, si es muy bajo, se nos colará ruido del acelerometro
@@ -67,12 +68,12 @@ class Kalman:
         self.kf.x = init_conditions 
         
         # Matriz de covarianza del estado inicial
-        self.kf.P = np.eye(2) # matriz identidad
+        self.kf.P = np.diag([0, 0])
 
     def get_angles(self, dt):
-        z = self.get_imu_data()
-        self.kf.F = np.array([[1, -dt],
-                              [0, 1]])
+        z = self.get_imu_data(dt)
+        self.kf.Q = Q_discrete_white_noise(dim=2, dt=dt, var=self.q_var) # process noise covarianze matrix
+        self.kf.F = np.array([[1, -dt], [0, 1]])
         # Predicción del estado
         self.kf.predict()
         
@@ -80,17 +81,17 @@ class Kalman:
         self.kf.update(z)
         angle_estimated, angular_velocity_estimated = self.kf.x
         
-        return angle_estimated, angular_velocity_estimated
+        return np.rad2deg(angle_estimated), np.rad2deg(angular_velocity_estimated)
 
-    def get_imu_data(self):
+    def get_imu_data(self, dt):
         accel_data = self.mpu.get_accel_data()
         gyro_data = self.mpu.get_gyro_data()
         
         # Supongamos que el ángulo se obtiene integrando la velocidad angular
         # (esto es una simplificación; normalmente necesitarías un filtro complementario o algo similar)
-        angle = np.rad2deg(np.arctan2(accel_data['y'] - self.error[0], accel_data['z'] - self.error[1])) # arctan devuelve en radianes
-        angular_velocity = gyro_data['x'] - self.error[2] # º/s
-        # angle = angular_velocity * dt * 0.996 + acc_angle * (1.0 - 0.996) # remrc, hay que hacer algo para que el giroscopio no tenga tanta importancia
-
+        alpha = 0.996
+        angle = np.arctan2((accel_data['y'] - self.error[0]), accel_data['z'] - self.error[1]) # arctan devuelve en radianes
+        angular_velocity = np.deg2rad(gyro_data['x'] - self.error[2]) # rad/s
+        angle = alpha * (angular_velocity * dt + angle) + (1 - alpha) * angle
         
         return np.array([angle, angular_velocity])
