@@ -7,53 +7,38 @@ class Kalman:
     def __init__(self, my_mpu, calibrate = True):
 
         self.my_mpu = my_mpu # Note that the MPU return data in [m/s**2] for accelerometer and [deg/s] for gyro
-        self.t_prev = datetime.now() # Time when object is initialised
+        # self.t_prev = datetime.now() # Time when object is initialised
         
-        if calibrate == True:# We need to calibrate the MPU for errors        
-
+        if calibrate == True:# We need to calibrate the MPU for errors       
             calib = []
-    
             print("Starting MPU calibration..."); sleep(1)
-    
             for i in range(100):
     
                 xx = [self.my_mpu.get_accel_data()['y'], self.my_mpu.get_accel_data()['z'] - 9.8,
                       self.my_mpu.get_gyro_data()['x']]
-                
                 calib.append(xx)
                 
             calib = np.array(calib) # Make is a 100*3 matrix
-            
             self.error = np.mean(calib, axis = 0)
-            
             print("MPU  calibrated, corrections Y, Z, Omega_x = ", round(self.error[0], 2), round(self.error[1], 2), round(self.error[2], 2))
-            
             sleep(0.5)
-        
         else:
-            
             self.error = np.array([0.3, -0.75, -2.45])
-            
             print("Using  pre-calibrated corrections Y, Z, Omega_x = ", round(self.error[0], 2), round(self.error[1], 2), round(self.error[2], 2))
 
-        
-        
         print('Calculating initial conditions for Kalman filter')
         
    
         R = [] # For initial values and sensor covariance matrix
         
         for i in range(100):
-            
             f1 = np.arctan((self.my_mpu.get_accel_data()['y'] - self.error[0]) / (self.my_mpu.get_accel_data()['z'] - self.error[1]))
             f2 = np.deg2rad(self.my_mpu.get_gyro_data()['x'] - self.error[2]) # Gyro bias [rad] 
-            
             R.append([f1,f2]) # 100 samples of angle and angular velocity (bias in gyro) in [rad] and [rad/s] respectively
             
         R = np.array(R); # Make it an array of 100*2
        
         init_conditions = np.mean(R, axis = 0).reshape(2,1) # Get initial conditions in 2*1 form
-       
         print('Calculated initial states for Kalman filter Acc angle, Gyro bias (constant inaccuracy) ', init_conditions)    
             
         self.B = np.array([[1], [0]]) # System B (input) matrix used for giving input (n_states * 1)        
@@ -72,17 +57,23 @@ class Kalman:
         self.X_0 = init_conditions # These are the initial conditions (n_states * 1)
         self.P = np.random.rand(2,2)*np.eye(2) # Error covariance matrix initialised (n_states * n_states)
         self.Q = np.diag([0.01, 0.03]) # Process noise covariance matrix (n_states * n_states) contains variance (std**2 of both states)
+        # self.Q = np.diag([a, b]) 
+        # si angulo estimado se actualiza lentamente hay que bajar a para hacerlo más responsivo
+        # si angulo estimado empieza a driftear, hay que subir b.
+        
         self.R = (np.std(R[:,0]))**2 # Sensor noise covariance matrix for accelerometer
+        # self.R = 0.003
+        # si es muy alto, el filtro responderá muy lento ya que no tendrá en cuenta las medidas, si es muy bajo, se nos colará ruido del acelerometro
         
         print('Initialised X_0, Q, P and R matrices, system ready')
         
-    def get_angle(self, units = 'rad'):
+    def get_angle(self, dt, units = 'rad'):
         
-        # Get the time elapsed first
+        # # Get the time elapsed first
         
-        t_now = datetime.now()            
+        # t_now = datetime.now()            
                     
-        dt = (t_now - self.t_prev).total_seconds()# Total time difference in seconds
+        # dt = (t_now - self.t_prev).total_seconds()# Total time difference in seconds
         
         # Step 1: Initialise A matrix and predict state. The system model is X_k = A*X_(k-1) + B*U(k)
         
@@ -121,7 +112,7 @@ class Kalman:
         
         self.X_0 = X_now # State prev = state now for next step calculation
                 
-        self.t_prev = t_now # Time now = time prev for next step
+        # self.t_prev = t_now # Time now = time prev for next step
         
         if units == 'deg':
             aa, bb = np.rad2deg(theta), np.rad2deg(theta_dot) #theta_dot es la velocidad angular
