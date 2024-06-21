@@ -115,7 +115,7 @@ class Moto:
             # actual_rpm = math.fabs((bb / 360.0) * 60) # Conversión de deg/s -> rpm
             # dc = (actual_rpm / MAX_RPM) * 100
             # dc = max(30, min(100, dc_uncontrolled))
-            print("dc: ", dc)
+            #print("dc: ", dc)
             if (angulo > 0): #Voy a asumir que cuando es > 0 se inclina a la derecha               
                 self.lpwm.stop()
                 self.rpwm.start(dc)
