@@ -7,6 +7,7 @@ from datetime import datetime
 class Kalman:
     
     def __init__(self, mpu, calibrate=True):
+        self.mpu = mpu
         self.error = [0.3, -0.75, -2.45]
         if calibrate:
             calib = []
@@ -68,16 +69,28 @@ class Kalman:
         # Matriz de covarianza del estado inicial
         self.kf.P = np.eye(2) # matriz identidad
 
+    def get_angles(self, dt):
+        z = self.get_imu_data()
+        self.kf.F = np.array([[1, -dt],
+                              [0, 1]])
+        # Predicción del estado
+        self.kf.predict()
+        
+        # Actualización del estado con la nueva observación
+        self.kf.update(z)
+        angle_estimated, angular_velocity_estimated = self.kf.x
+        
+        return angle_estimated, angular_velocity_estimated
 
-    def get_imu_data(self, my_mpu, dt):
-        accel_data = my_mpu.get_accel_data()
-        gyro_data = my_mpu.get_gyro_data()
+    def get_imu_data(self):
+        accel_data = self.mpu.get_accel_data()
+        gyro_data = self.mpu.get_gyro_data()
         
         # Supongamos que el ángulo se obtiene integrando la velocidad angular
         # (esto es una simplificación; normalmente necesitarías un filtro complementario o algo similar)
-        acc_angle = np.rad2deg(np.arctan2(accel_data['y'] - self.error[0], accel_data['z'] - self.error[1])) # arctan devuelve en radianes
+        angle = np.rad2deg(np.arctan2(accel_data['y'] - self.error[0], accel_data['z'] - self.error[1])) # arctan devuelve en radianes
         angular_velocity = gyro_data['x'] - self.error[2] # º/s
-        angle = angular_velocity * dt * 0.996 + acc_angle * (1.0 - 0.996)
+        # angle = angular_velocity * dt * 0.996 + acc_angle * (1.0 - 0.996) # remrc, hay que hacer algo para que el giroscopio no tenga tanta importancia
 
         
         return np.array([angle, angular_velocity])

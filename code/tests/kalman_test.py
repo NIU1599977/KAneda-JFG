@@ -12,8 +12,8 @@ from src.moto import Moto
 
 def kalman(motoClass):
     my_mpu = mpu6050(0x68) # Initialize MPU to get acceleration and rotation data
-    My_Mpu = Kalman(my_mpu) # Object for getting theta and theta_dot
-    dt = 0.01
+    filter = Kalman(my_mpu) # Object for getting theta and theta_dot
+    t_init = datetime.now() # sTime now
 
     sleep(0.1)
 
@@ -22,28 +22,19 @@ def kalman(motoClass):
     try:
         while True:
             t_now = datetime.now()
-            # Obtener datos del IMU
-            z = My_Mpu.get_imu_data(my_mpu, dt)
-            kf = My_Mpu.kf
-            # Predicción del estado
-            kf.predict()
-            
-            # Actualización del estado con la nueva observación
-            kf.update(z)
-            
-            # Obtén el estado estimado
-            angle_estimated, angular_velocity_estimated = kf.x
+            dt = (t_now - t_init).total_seconds()*1000 #Time in millis
+            # Obtener datos del kalman
+            angle_estimated, angular_velocity_estimated = filter.get_angles(dt)   
             # angle_estimated, angular_velocity_estimated = My_Mpu.get_angle('deg')
 
             # Imprime o utiliza el estado estimado
-            print(f"Angle: {angle_estimated}, Angular Velocity: {angular_velocity_estimated}")
+            print(f"Angle: {angle_estimated}, Angular Velocity: {angular_velocity_estimated}, dt: {np.round(dt, 2)}")
 
-            motoClass.move_volanteInercia(angle_estimated, angular_velocity_estimated, dt)
+            motoClass.move_volanteInercia(angle_estimated, angular_velocity_estimated)
             
             t_init = t_now
             # Pausar para simular el intervalo de tiempo (ejemplo: 10 ms)
             sleep(0.01) 
-            dt = (t_now - t_init).total_seconds()*1000 #Time in millis
 
     except KeyboardInterrupt:
         GPIO.cleanup()

@@ -99,7 +99,7 @@ class Moto:
 
     
         
-    def move_volanteInercia(self, angulo, bb, dt):
+    def move_volanteInercia(self, angulo, bb):
         # K1 = 45
         # K2 = 30
         K1 = 10
