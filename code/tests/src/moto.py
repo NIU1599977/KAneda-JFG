@@ -104,6 +104,7 @@ class Moto:
         # K2 = 30
         K1 = 10
         K2 = 4
+        dc = min(30, abs(K1 * (angulo/10) + K2 * (bb/100)))
         # GPIO.output(L_EN, GPIO.HIGH)
         # GPIO.output(R_EN, GPIO.HIGH)
 
@@ -111,7 +112,6 @@ class Moto:
         # print("Angulo [deg] = ", int(angulo)," Velocidad angular [deg/s] = ", int(dc), " loop time[ms] = ", np.round(dt, 2))
         
         if (angulo != 0):
-            dc = min(100, abs(K1 * (angulo/10) + K2 * (bb/10)))
             # actual_rpm = math.fabs((bb / 360.0) * 60) # Conversión de deg/s -> rpm
             # dc = (actual_rpm / MAX_RPM) * 100
             # dc = max(30, min(100, dc_uncontrolled))
@@ -123,6 +123,7 @@ class Moto:
             else: #Se está inclinando hacia la izquierda, asumo
                 self.rpwm.stop()
                 self.lpwm.start(dc)
+        return dc
             
         #GPIO.output(L_EN, GPIO.LOW)
         #GPIO.output(R_EN, GPIO.LOW)
