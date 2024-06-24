@@ -1,5 +1,6 @@
-#import libraries.servo as servo
+import libraries.servo as servo
 import libraries.stepper as stepper
+
 import math
 import smbus
 import time
@@ -25,7 +26,7 @@ STEP_PIN3 = 35
 STEP_PIN4 = 37
 
 #Servo
-SERVO_PIN1 = 9
+SERVO_PIN = 9
 
 #POLOLU
 MAX_ANG = 136 # ???
@@ -35,7 +36,7 @@ MAX_RPM = 50
 class Moto:
     def __init__(self):
         self.s1 = stepper.Stepper([STEP_PIN1,STEP_PIN2,STEP_PIN3,STEP_PIN4])
-        #self.servo = servo
+        self.servo = servo(SERVO_PIN)
 
         GPIO.setmode(GPIO.BOARD)
         #IBT_2
@@ -58,7 +59,6 @@ class Moto:
         self.kd = 0.001  # Constante derivativa
         self.error_anterior = 0
         self.integral = 0
-
     
         
     def distance_to_steps(self, distance_mm, step_angle=5.625, reduction_ratio=64, lead_screw_pitch=1):
@@ -105,27 +105,14 @@ class Moto:
                 aux = -1 * iteraciones
                 self.s1.move(self.s1.reverse, aux)
             # time.sleep(1)
-
-
     
         
     def move_volanteInercia(self, angulo, bb):
-        # K1 = 45
-        # K2 = 30
         K1 = 10
         K2 = 4
         dc = min(30, abs(K1 * (angulo/10) + K2 * (bb/100)))
-        # GPIO.output(L_EN, GPIO.HIGH)
-        # GPIO.output(R_EN, GPIO.HIGH)
 
-
-        # print("Angulo [deg] = ", int(angulo)," Velocidad angular [deg/s] = ", int(dc), " loop time[ms] = ", np.round(dt, 2))
-        
         if (angulo != 0):
-            # actual_rpm = math.fabs((bb / 360.0) * 60) # Conversión de deg/s -> rpm
-            # dc = (actual_rpm / MAX_RPM) * 100
-            # dc = max(30, min(100, dc_uncontrolled))
-            #print("dc: ", dc)
             if (angulo > 0): #Voy a asumir que cuando es > 0 se inclina a la derecha               
                 self.lpwm.stop()
                 self.rpwm.start(dc)
@@ -134,6 +121,3 @@ class Moto:
                 self.rpwm.stop()
                 self.lpwm.start(dc)
         return dc
-            
-        #GPIO.output(L_EN, GPIO.LOW)
-        #GPIO.output(R_EN, GPIO.LOW)
