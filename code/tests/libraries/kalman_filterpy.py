@@ -9,6 +9,7 @@ class Kalman:
     def __init__(self, mpu, calibrate=True):
         self.mpu = mpu
         self.error = [0.3, -0.75, -2.45]
+        self.angle = 0
         if calibrate:
             calib = []
             print("Starting MPU calibration..."); sleep(1)
@@ -46,7 +47,7 @@ class Kalman:
         self.kf = KalmanFilter(dim_x=2, dim_z=2)
         
         # Matriz de transición del estado
-        dt = 0.03  # Intervalo de tiempo (ejemplo: 10 ms)
+        dt = 0.02  # Intervalo de tiempo (ejemplo: 10 ms)
         self.kf.F = np.array([[1, -dt],
                         [0, 1]])
         
@@ -61,7 +62,7 @@ class Kalman:
         # si angulo estimado se actualiza lentamente hay que bajar a para hacerlo más responsivo
         
         # Matriz de covarianza de la observación
-        self.kf.R = 0.03  # si es muy alto, el filtro responderá muy lento ya que no tendrá en cuenta las medidas, si es muy bajo, se nos colará ruido del acelerometro
+        self.kf.R = 0.05  # si es muy alto, el filtro responderá muy lento ya que no tendrá en cuenta las medidas, si es muy bajo, se nos colará ruido del acelerometro
         # self.kf.R = np.array([[r_var, 0], [0, r_var]])
         
         # Inicialización del estado
@@ -72,8 +73,8 @@ class Kalman:
 
     def get_angles(self, dt):
         z = self.get_imu_data(dt)
-        self.kf.Q = Q_discrete_white_noise(dim=2, dt=dt, var=self.q_var) # process noise covarianze matrix
-        self.kf.F = np.array([[1, -dt], [0, 1]])
+        # self.kf.Q = Q_discrete_white_noise(dim=2, dt=dt, var=self.q_var) # process noise covarianze matrix
+        # self.kf.F = np.array([[1, -dt], [0, 1]])
         # Predicción del estado
         self.kf.predict()
         
@@ -92,6 +93,6 @@ class Kalman:
         alpha = 0.996
         angle = np.arctan2((accel_data['y'] - self.error[0]), accel_data['z'] - self.error[1]) # arctan devuelve en radianes
         angular_velocity = np.deg2rad(gyro_data['x'] - self.error[2]) # rad/s
-        angle = alpha * (angular_velocity * dt + angle) + (1 - alpha) * angle
+        # self.angle = alpha * (angular_velocity * dt + angle) + (1 - alpha) * self.angle
         
-        return np.array([angle, angular_velocity])
+        return np.array([self.angle, angular_velocity])

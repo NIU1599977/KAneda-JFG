@@ -3,10 +3,11 @@ import threading
 import numpy as np
 from time import sleep
 from mpu6050 import mpu6050
+# from libraries.imu_file import mpu6050
 import RPi.GPIO as GPIO
 
-from libraries.kalman_filterpy import Kalman 
-# from libraries.kalman import Kalman
+# from libraries.kalman_filterpy import Kalman 
+from libraries.kalman import Kalman
 from src.moto import Moto
 
 
@@ -24,8 +25,8 @@ def kalman(motoClass):
             t_now = datetime.now()
             dt = (t_now - t_init).total_seconds() #Time in seconds
             # Obtener datos del kalman
-            angle_estimated, angular_velocity_estimated = filter.get_angles(dt)   
-            # angle_estimated, angular_velocity_estimated = filter.get_angle(dt, 'deg')
+            # angle_estimated, angular_velocity_estimated = filter.get_angles(dt)   
+            angle_estimated, angular_velocity_estimated = filter.get_angle(dt, 'deg')
 
             # Imprime o utiliza el estado estimado
 
@@ -35,7 +36,7 @@ def kalman(motoClass):
 
             t_init = t_now
             # Pausar para simular el intervalo de tiempo (ejemplo: 10 ms)
-            sleep(0.01) 
+            # sleep(0.01) 
 
     except KeyboardInterrupt:
         GPIO.cleanup()

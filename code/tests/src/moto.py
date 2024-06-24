@@ -12,19 +12,29 @@ SPEED = 10
 TURN_TIME = 0.01
 
 #IBT_2
-RPWM = 12
+RPWM = 33
 LPWM = 32
 L_EN = 8
 R_EN = 10
 FREQ_IBT = 100
 
+#Stepper
+STEP_PIN1 = 29
+STEP_PIN2 = 31
+STEP_PIN3 = 35
+STEP_PIN4 = 37
+
+#Servo
+SERVO_PIN1 = 9
+
 #POLOLU
 MAX_ANG = 136 # ???
 #MAX_RPM = 1300
 MAX_RPM = 50
+
 class Moto:
     def __init__(self):
-        self.s1 = stepper.Stepper([31,33,35,37])
+        self.s1 = stepper.Stepper([STEP_PIN1,STEP_PIN2,STEP_PIN3,STEP_PIN4])
         #self.servo = servo
 
         GPIO.setmode(GPIO.BOARD)
@@ -80,21 +90,21 @@ class Moto:
 
         
     def seguir_ruta(self):
-        movimientos = [[512, 0], [100, 0.5], [512, 0]]
+        movimientos = [[512, 0], [512, 0.5], [512, 0]]
         for elemento in movimientos:
             iteraciones = elemento[0]
             angulo = elemento[1]
             
             #self.servo.value = angulo;
             
-            time.sleep(0.5)
+            # time.sleep(0.5)
 
             if iteraciones > 0:
                 self.s1.move(self.s1.forward, iteraciones)
             elif iteraciones < 0:
                 aux = -1 * iteraciones
                 self.s1.move(self.s1.reverse, aux)
-            time.sleep(1)
+            # time.sleep(1)
 
 
     
