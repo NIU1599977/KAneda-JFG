@@ -90,15 +90,19 @@ class Moto:
 
         
     def seguir_ruta(self):
-        movimientos = [[512, 0], [512, 0.5], [512, 0]]
+        movimientos = [[512, 0], [512, 1], [512, 0.5], [512, -1], [512, 0.5], [512, 0]]
         for elemento in movimientos:
             iteraciones = elemento[0]
             angulo = elemento[1]
             
-            #self.servo.value = angulo;
+            if (angulo != 0):
+                if (angulo < 0):
+                    self.servo.left()
+                elif (angulo == 0.5):
+                    self.servo.mid()
+                else:
+                    self.servo.right()
             
-            # time.sleep(0.5)
-
             if iteraciones > 0:
                 self.s1.move(self.s1.forward, iteraciones)
             elif iteraciones < 0:
