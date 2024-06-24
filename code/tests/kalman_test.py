@@ -41,5 +41,5 @@ def kalman(motoClass):
     except KeyboardInterrupt:
         GPIO.cleanup()
     
-
-kalman(Moto())
+if __name__ == "__main__":
+    kalman(Moto())
