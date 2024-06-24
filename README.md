@@ -5,6 +5,7 @@ Motocicleta auto-balanceable capaz de reconocer señales de tráfico mediante vi
 ## Tabla de Contenidos
 
 + [Descripción del Proyecto](#descripción-del-proyecto)
++ [Librerías y Configuración](#librerías-y-configuración)
 + [Componentes Electrónicos](#componentes-electrónicos)
 + [Componentes Mecánicos](#componentes-mecánicos)
 + [Esquema Eléctrico](#esquema-eléctrico)
@@ -23,14 +24,46 @@ Este proyecto de motocicleta auto-balanceable surge con la visión de desarrolla
 
 La tecnología de auto-balanceo de la motocicleta se basa en el proyecto [Self-Balancing-Bike](https://github.com/remrc/Self-Balancing-Bike), realizado por [remrc](https://github.com/remrc) en Arduino.
 
+## Librerías y Configuración
+
+### Instalar Dependencias
+
+1. Instalar git: `sudp apt install git`
+2. Instalar gestor de librerías de python: `sudo apt install python3-pip`
+3. Instalar librería smbus: `sudo apt install python3-smbus`
+4. Instalar librería gpiozero: `sudo apt install python3-gpiozero`
+5. Instalar librería mpu6050: `pip3 install mpu6050-raspberrypi`
+6. Instalar librería numpy: `sudo apt install python3-numpy`
+7. Instalar librería filterpy: `pip3 install filterpy`
+8. Instalar librería openblas: `sudo apt install libopenblas-dev`
+9. Instalar librería OpenCV: `sudo apt install python3-opencv`
+10. Instalar librería PiCamera: `sudo apt install python3-picamera2`
+11. Instalar Flask: `pip3 install flask`
+
+\*Es posible que en ocasiones haya que añadir el parámetro `--break-system-packages` a los comandos `pip3 install <package>`.
+
+### Activar Interfaces de Comunicación Hardware
+
+1. Entrar en el asistente de configuración de la Raspberry: `sudo raspi-config`
+2. Abrir _Interfacing Options_.
+3. Activar cámara (_Enable Camera_).
+4. Activar I2C.
+5. Abrir _Advanced Options_.
+6. Clicar _Expand Filesystem_.
+
+### Activar el Demonio de PiGPIO
+
+1. `sudo systemctl enable pigpiod`
+2. `sudo pigpiod`
+
 ## Componentes Electrónicos
 
 | Componente | Imagen | Componente | Imagen |
 | --- | --- | --- | --- |
 | [Kit Raspberry Pi Zero W + MicroSD 32GB](https://tienda.bricogeek.com/placas-raspberry-pi/1082-kit-basico-raspberry-pi-zero-wifi-microsd-32gb.html) | <img src="https://tienda.bricogeek.com/4669-thickbox_default/kit-basico-raspberry-pi-zero-wifi-microsd-32gb.jpg" width="200" height="150"/> | [Cámara Raspberry Pi v2 - 8 Megapíxeles](https://tienda.bricogeek.com/accesorios-raspberry-pi/822-camara-raspberry-pi-v2-8-megapixels.html) | <img src="https://tienda.bricogeek.com/3115-thickbox_default/camara-raspberry-pi-v2-8-megapixels.jpg" width="200" height="150"/> |
 | [Cable cámara Raspberry Pi Zero (30cm)](https://tienda.bricogeek.com/accesorios-raspberry-pi/1562-cable-camara-raspberry-pi-zero-30cm.html) | <img src="https://tienda.bricogeek.com/7022-thickbox_default/cable-camara-raspberry-pi-zero-30cm.jpg" width="200" height="150"/> | [Módulo GY-521 Acelerómetro y Giroscopio MPU-6050](https://tienda.bricogeek.com/acelerometros/1682-modulo-gy-521-acelerometro-y-giroscopio-mpu-6050.html) | <img src="https://tienda.bricogeek.com/7776-thickbox_default/modulo-gy-521-acelerometro-y-giroscopio-mpu-6050.jpg" width="200" height="150"/> |
-| [Micro servo miniatura SG90](https://tienda.bricogeek.com/servomotores/968-micro-servo-miniatura-sg90.html) | <img src="https://tienda.bricogeek.com/3972-thickbox_default/micro-servo-miniatura-sg90.jpg" width="200" height="150"/> | [Motor paso a paso 28BYJ-48 (5V) con driver ULN2003](https://tienda.bricogeek.com/motores-paso-a-paso/969-motor-paso-a-paso-28byj-48-5v-con-driver-uln2003.html) | <img src="https://tienda.bricogeek.com/5892-thickbox_default/motor-paso-a-paso-28byj-48-5v-con-driver-uln2003.jpg" width="200" height="150"/> |
-| [Motor Micro Metal LP con reductora 10:1](https://tienda.bricogeek.com/motores/113-motor-micro-metal-lp-con-reductora-10-1.html) | <img src="https://tienda.bricogeek.com/288-thickbox_default/motor-micro-metal-lp-con-reductora-10-1.jpg" width="200" height="150"/> | [Controlador de motores TB6612FNG](https://tienda.bricogeek.com/controladores-motores/999-controlador-de-motores-tb6612fng.html) | <img src="https://tienda.bricogeek.com/4166-large_default/controlador-de-motores-tb6612fng.jpg" width="200" height="150"/> |
+| [Servo estándar S3003, 360 Grados](https://tienda.bricogeek.com/motores/118-servomotor-de-rotacion-continua-s3003-360-grados.html?gad_source=1&gclid=EAIaIQobChMIsKLP8M30hgMVU6loCR0vywPgEAAYAiAAEgK60fD_BwE) | <img src="https://tienda.bricogeek.com/7967-large_default/servomotor-de-rotacion-continua-s3003-360-grados.jpg" width="200" height="150"/> | [Motor paso a paso 28BYJ-48 (5V) con driver ULN2003](https://tienda.bricogeek.com/motores-paso-a-paso/969-motor-paso-a-paso-28byj-48-5v-con-driver-uln2003.html) | <img src="https://tienda.bricogeek.com/5892-thickbox_default/motor-paso-a-paso-28byj-48-5v-con-driver-uln2003.jpg" width="200" height="150"/> |
+| [Motor micro metal 75:1 HP con eje extendido](https://tienda.bricogeek.com/motores-dc/803-motor-micro-metal-751-hp-con-eje-extendido.html) | <img src="https://tienda.bricogeek.com/2998-large_default/motor-micro-metal-751-hp-con-eje-extendido.jpg" width="200" height="150"/> | [BTS7960 Driver motor 43A de alta potencia](https://tienda.bricogeek.com/controladores-motores/1560-bts7960-driver-motor-43a-de-alta-potencia.html?search_query=BTS7960+&results=1) | <img src="https://tienda.bricogeek.com/7024-large_default/bts7960-driver-motor-43a-de-alta-potencia.jpg" width="200" height="150"/> |
 | [Bateria Lipo 1000mAh / 3.7V - 603050](https://tienda.bricogeek.com/baterias-lipo/135-bateria-lipo-1000mah-603050-37v.html) | <img src="https://tienda.bricogeek.com/385-thickbox_default/bateria-lipo-1000mah-603050-37v.jpg" width="200" height="150"/> | [Cargador LiPo PowerBoost 500](https://tienda.bricogeek.com/convertidores-de-voltaje/677-cargador-lipo-powerboost-500.html) | <img src="https://tienda.bricogeek.com/2303-thickbox_default/cargador-lipo-powerboost-500.jpg" width="200" height="150"/> |
 
 ## Componentes Mecánicos
