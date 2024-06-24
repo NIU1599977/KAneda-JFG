@@ -193,8 +193,11 @@ Teachable Machine es una herramienta interactiva y accesible creada por Google, 
 **Ceda el Paso:** La moto reducirá la velocidad y esperará hasta que sea seguro avanzar.
 
 ## Simulación
+La siguiente  [Simulacion](https://uab-my.sharepoint.com/personal/1522975_uab_cat/_layouts/15/stream.aspx?id=%2Fpersonal%2F1522975%5Fuab%5Fcat%2FDocuments%2F5%2F2nSemestre%2FRob%C3%B3tica%2FPractica%2Fkaneda%2Emp4&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&ga=1&referrer=StreamWebApp%2EWeb&referrerScenario=AddressBarCopied%2Eview%2E3243f74a%2Da22f%2D4821%2Dab06%2D5e838bfa0742) muestra el comportamiento idóneo que debería tener nuestro robot.
 
 ## Contribuciones y Agradecimientos
+
+Queremos dar un agradecimiento a todo el profesorado de Robòtica, Llenguatge i Programació por la ayuda ofrecida y el seguimiento en nuestro proyecto KAneda-JFG para que saliera adelante.
 
 ## Autoría
 
