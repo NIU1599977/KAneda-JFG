@@ -50,7 +50,7 @@ class Stepper:
         GPIO.cleanup()
 
 def test():
-    test_stepper = Stepper([31,33,35,37])
+    test_stepper = Stepper([29,31,35,37])
     test_stepper.move(test_stepper.forward)
     time.sleep(0.5)
     test_stepper.move(test_stepper.reverse)
