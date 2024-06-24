@@ -5,6 +5,7 @@ Motocicleta auto-balanceable capaz de reconocer señales de tráfico mediante vi
 ## Tabla de Contenidos
 
 + [Descripción del Proyecto](#descripción-del-proyecto)
++ [Librerías y Configuración](#librerías-y-configuración)
 + [Componentes Electrónicos](#componentes-electrónicos)
 + [Componentes Mecánicos](#componentes-mecánicos)
 + [Esquema Eléctrico](#esquema-eléctrico)
@@ -22,6 +23,38 @@ Motocicleta auto-balanceable capaz de reconocer señales de tráfico mediante vi
 Este proyecto de motocicleta auto-balanceable surge con la visión de desarrollar un vehículo autónomo capaz de detectar y obedecer las señales de tráfico sin la intervención de un conductor. El propósito principal es brindar a la Dirección General de Tráfico (DGT) una herramienta para llevar a cabo demostraciones y programas educativos sobre seguridad vial. Utilizando técnicas avanzadas de visión por computador, nuestra moto puede interpretar y responder de manera precisa a las señales del entorno, lo que la convierte en un prototipo innovador en el campo de la movilidad autónoma.
 
 La tecnología de auto-balanceo de la motocicleta se basa en el proyecto [Self-Balancing-Bike](https://github.com/remrc/Self-Balancing-Bike), realizado por [remrc](https://github.com/remrc) en Arduino.
+
+## Librerías y Configuración
+
+### Instalar Dependencias
+
+1. Instalar git: `sudp apt install git`
+2. Instalar gestor de librerías de python: `sudo apt install python3-pip`
+3. Instalar librería smbus: `sudo apt install python3-smbus`
+4. Instalar librería gpiozero: `sudo apt install python3-gpiozero`
+5. Instalar librería mpu6050: `pip3 install mpu6050-raspberrypi`
+6. Instalar librería numpy: `sudo apt install python3-numpy`
+7. Instalar librería filterpy: `pip3 install filterpy`
+8. Instalar librería openblas: `sudo apt install libopenblas-dev`
+9. Instalar librería OpenCV: `sudo apt install python3-opencv`
+10. Instalar librería PiCamera: `sudo apt install python3-picamera2`
+11. Instalar Flask: `pip3 install flask`
+
+\*Es posible que en ocasiones haya que añadir el parámetro `--break-system-packages` a los comandos `pip3 install <package>`.
+
+### Activar Interfaces de Comunicación Hardware
+
+1. Entrar en el asistente de configuración de la Raspberry: `sudo raspi-config`
+2. Abrir _Interfacing Options_.
+3. Activar cámara (_Enable Camera_).
+4. Activar I2C.
+5. Abrir _Advanced Options_.
+6. Clicar _Expand Filesystem_.
+
+### Activar el Demonio de PiGPIO
+
+1. `sudo systemctl enable pigpiod`
+2. `sudo pigpiod`
 
 ## Componentes Electrónicos
 
