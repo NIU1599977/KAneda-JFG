@@ -1,29 +1,48 @@
 """
 Archivo de configuración y declaración de funciones del servo micro-motor SG90.
 """
-import gpiozero
 from gpiozero import Servo
 from time import sleep
  
-GPIO = 9
+class Servo_3003:
+    def __init__(self, pin):
+        self.servo = Servo(pin)
 
-#servo = Servo(GPIO, -1, 0.00049, 0.002, 0.02, gpiozero.pins.pigpio.PiGPIOFactory())
-servo = Servo(GPIO)
-print(servo.value)
+    def test(self):
+        self.left()
+        
+        self.mid()
 
-def test():
-    while True:
-        servo.mid()
+        self.right()
+
+        self.mid()
+
+    def mid(self):
+        if (self.servo.value == 1.0):
+            self.servo.min()
+        else:
+            self.servo.max()
+        sleep(0.3)
+
+    def right(self):
+        self.servo.max()
         sleep(0.5)
-        servo.min()
-        sleep(0.5)
-        servo.mid()
-        sleep(0.5)
-        servo.max()
-        sleep(0.5)
 
-def turn(value):
-    servo.value = value
+    def left(self):
+        self.servo.min()
+        sleep(0.5)
+    
+    def detach(self):
+        self.servo.detach()
 
 
-servo.mid()
+if __name__ == "__main__":
+    servo = Servo_3003(9)
+    servo.test()
+    # print(servo.value)
+    # print(servo.max_pulse_width)
+    # print(servo.min_pulse_width)
+    # print(servo.pulse_width)
+
+    # sleep(4)
+    servo.detach()
