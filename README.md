@@ -170,7 +170,7 @@ Yolo es la tecnologia que usaremos para nuestra implementación para el tema de 
 TensorFlow Lite es una versión ligera y optimizada de TensorFlow, diseñada específicamente para permitir el despliegue de modelos de aprendizaje automático en dispositivos con recursos limitados, como teléfonos móviles, microcontroladores y otros dispositivos integrados. Esta tecnología es especialmente relevante para proyectos de visión por computador donde la eficiencia y la velocidad son críticas, y los recursos de hardware son limitados.
 
 
-### Teacheble Machine
+### Teachable Machine
 Teachable Machine es una herramienta interactiva y accesible creada por Google, diseñada para permitir a cualquier persona, sin necesidad de conocimientos avanzados en programación o aprendizaje automático, entrenar modelos de inteligencia artificial (IA). Esta plataforma simplifica el proceso de creación de modelos de aprendizaje automático mediante una interfaz fácil de usar, que permite a los usuarios crear modelos personalizados para tareas de clasificación de imágenes, sonidos y poses corporales.
 
 ![image](https://github.com/NIU1599977/KAneda-JFG/assets/166625123/28a0d5b4-7f66-4165-8819-6f4db15834ab)
